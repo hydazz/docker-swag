@@ -4,7 +4,7 @@ VAR=$2
 
 if [ "$CMD" = "nginx" ]; then
   if [ "$VAR" = "restart" ]; then
-    echo "Restarting nginx"
+    echo "Restarting Nginx"
     s6-svc -h /var/run/s6/services/nginx
     echo "It is recommended to restart the container if you are experiencing issues"
   fi

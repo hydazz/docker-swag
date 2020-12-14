@@ -82,8 +82,6 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
   cp /defaults/wordpress.conf /config/nginx/wordpress.conf
 [[ ! -f /config/nginx/security.conf ]] &&
   cp /defaults/security.conf /config/nginx/security.conf
-[[ ! -f /config/nginx/cloudflare.conf ]] &&
-  cp /defaults/cloudflare.conf /config/nginx/cloudflare.conf
 [[ ! -f /config/nginx/fastcgi_params ]] &&
   cp /defaults/fastcgi_params /config/nginx/fastcgi_params
 [[ ! -f /usr/sbin/swag ]] &&
