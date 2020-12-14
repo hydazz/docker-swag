@@ -8,6 +8,7 @@ SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relatio
 | Alpine | Edge |
 | Nginx | 1.18.0 |
 | PHP | 7.4* |
+| s6-overlay | 2.1.0.2 |
 
 *PHP 8 image is in the works
 
