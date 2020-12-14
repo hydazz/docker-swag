@@ -1,0 +1,13 @@
+/config/log/php/*.log {
+    daily
+    rotate 2
+    nodateext
+    notifempty
+    missingok
+    nocompress
+    sharedscripts
+    postrotate
+           s6-svc -t /var/run/s6/services/php-fpm
+    endscript
+    su abc abc
+}

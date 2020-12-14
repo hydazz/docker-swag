@@ -1,0 +1,25 @@
+#!/bin/bash
+CMD=$1
+VAR=$2
+
+if [ "$CMD" = "nginx" ]; then
+  if [ "$VAR" = "restart" ]; then
+    echo "Restarting nginx"
+    s6-svc -h /var/run/s6/services/nginx
+    echo "It is recommended to restart the container if you are experiencing issues"
+  fi
+  if [ "$VAR" = "test" ]; then
+    nginx -t -c /config/nginx/nginx.conf
+  fi
+fi
+
+if [ "$CMD" = "php" ]; then
+  if [ "$VAR" = "restart" ]; then
+    echo "Restarting PHP-FPM"
+    s6-svc -t /var/run/s6/services/php-fpm
+    echo "It is recommended to restart the container if you are experiencing issues"
+  fi
+  if [ "$VAR" = "test" ]; then
+    php -e -c /etc/php7/php.ini -r 'echo "PHP Configuration OK\n";'
+  fi
+fi

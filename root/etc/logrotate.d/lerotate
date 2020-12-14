@@ -1,0 +1,11 @@
+/config/log/letsencrypt/*.log {
+    weekly
+    rotate 52
+    nodateext
+    notifempty
+    missingok
+    nocompress
+    notifempty
+    sharedscripts
+    su abc abc
+}
