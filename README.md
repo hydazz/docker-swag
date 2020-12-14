@@ -1,4 +1,4 @@
-## Alpine Edge fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
+## Alpine Edge split of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
 
 SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes. It also contains fail2ban for intrusion prevention.
 
