@@ -9,8 +9,7 @@ nginx_confs=(
   nginx.conf
   proxy.conf
   security.conf
-  ssl.conf
-  wordpress.conf)
+  ssl.conf)
 
 for i in ${nginx_confs[@]}; do
   if [ "$(sed -nE 's|^## Version ([0-9]{4}\/[0-9]{2}\/[0-9]{2}).*|\1|p' /config/nginx/${i})" != "$(sed -nE 's|^## Version ([0-9]{4}\/[0-9]{2}\/[0-9]{2}).*|\1|p' /defaults/$(basename ${i}))" ]; then
