@@ -1,28 +1,29 @@
 ## Alpine Edge split of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
 
-SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes. It also contains fail2ban for intrusion prevention.
+SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes (Let's Encrypt and ZeroSSL). It also contains fail2ban for intrusion prevention.
 
-## Version Information
+This image also has most Nextcloud dependencies installed, removing the need to have 2 containers running Nginx and PHP using precious system resources
+
+## Version Information*
 | Name | Version |
 | :---: | --- |
 | Alpine | Edge |
 | Nginx | 1.18.0 |
-| PHP | 7.4 (:latest tag) |
-| PHP | 8.0 (:php8 tag) |
+| PHP | 7.4 |
 | s6-overlay | 2.1.0.2 |
-
+*See *package_versions.txt* for more detail
 
 ## Custom Commands
 ### *swag* Command
 This image also features the *swag* command, which is a bash script I made so you don't have to restart the whole container to apply configuration changes or to test the configuration.
 *swag* usage example:
 
-|Function|Usage|
-|--|--|
-|Test Nginx Configuration|swag nginx test|
-|Restart Nginx|swag nginx restart|
-|Restart PHP-FPM|swag php restart|
-|Test php.ini|swag php test|
+| Function | Usage |
+| :---: | --- |
+| Test Nginx Configuration | swag nginx test |
+| Restart Nginx | swag nginx restart |
+| Restart PHP-FPM | swag php restart |
+| Test php.ini | swag php test |
 
 ## Folder Changes
 This image has the following new folders:

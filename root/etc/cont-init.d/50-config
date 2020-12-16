@@ -10,6 +10,7 @@ SUBDOMAINS=${SUBDOMAINS}\\n\
 EXTRA_DOMAINS=${EXTRA_DOMAINS}\\n\
 ONLY_SUBDOMAINS=${ONLY_SUBDOMAINS}\\n\
 VALIDATION=${VALIDATION}\\n\
+CERTPROVIDER=${CERTPROVIDER}\\n\
 DNSPLUGIN=${DNSPLUGIN}\\n\
 EMAIL=${EMAIL}\\n\
 STAGING=${STAGING}\\n"
@@ -20,7 +21,7 @@ if [ -n "${TEST_RUN}" ]; then
 fi
 
 # Sanitize variables
-SANED_VARS=(DNSPLUGIN EMAIL EXTRA_DOMAINS ONLY_SUBDOMAINS STAGING SUBDOMAINS URL VALIDATION)
+SANED_VARS=(DNSPLUGIN EMAIL EXTRA_DOMAINS ONLY_SUBDOMAINS STAGING SUBDOMAINS URL VALIDATION CERTPROVIDER)
 for i in "${SANED_VARS[@]}"; do
   export echo "$i"="${!i//\"/}"
   export echo "$i"="$(echo "${!i}" | tr '[:upper:]' '[:lower:]')"
@@ -78,8 +79,6 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
   cp /defaults/geoip2.conf /config/nginx/geoip2.conf
 
 # Copy my custom files
-[[ ! -f /config/nginx/wordpess.conf ]] &&
-  cp /defaults/wordpress.conf /config/nginx/wordpress.conf
 [[ ! -f /config/nginx/security.conf ]] &&
   cp /defaults/security.conf /config/nginx/security.conf
 [[ ! -f /config/nginx/fastcgi_params ]] &&
@@ -109,15 +108,18 @@ fi
 rm /etc/crontabs/*
 cp /config/crontabs/* /etc/crontabs/
 
-# create original config file if it doesn't exist
-if [ ! -f "/config/donoteditthisfile.conf" ]; then
-  echo -e "ORIGURL=\"$URL\" ORIGSUBDOMAINS=\"$SUBDOMAINS\" ORIGONLY_SUBDOMAINS=\"$ONLY_SUBDOMAINS\" ORIGEXTRA_DOMAINS=\"$EXTRA_DOMAINS\" ORIGVALIDATION=\"$VALIDATION\" ORIGDNSPLUGIN=\"$DNSPLUGIN\" ORIGPROPAGATION=\"$PROPAGATION\" ORIGSTAGING=\"$STAGING\" ORIGDUCKDNSTOKEN=\"$DUCKDNSTOKEN\"" >/config/donoteditthisfile.conf
-  echo "Created donoteditthisfile.conf"
+# create original config file if it doesn't exist, move non-hidden legacy file to hidden
+if [ -f "/config/donoteditthisfile.conf" ]; then
+  mv /config/donoteditthisfile.conf /config/.donoteditthisfile.conf
+fi
+if [ ! -f "/config/.donoteditthisfile.conf" ]; then
+  echo -e "ORIGURL=\"$URL\" ORIGSUBDOMAINS=\"$SUBDOMAINS\" ORIGONLY_SUBDOMAINS=\"$ONLY_SUBDOMAINS\" ORIGEXTRA_DOMAINS=\"$EXTRA_DOMAINS\" ORIGVALIDATION=\"$VALIDATION\" ORIGDNSPLUGIN=\"$DNSPLUGIN\" ORIGPROPAGATION=\"$PROPAGATION\" ORIGSTAGING=\"$STAGING\" ORIGDUCKDNSTOKEN=\"$DUCKDNSTOKEN\" ORIGCERTPROVIDER=\"$CERTPROVIDER\" ORIGEMAIL=\"$EMAIL\"" >/config/.donoteditthisfile.conf
+  echo "Created .donoteditthisfile.conf"
 fi
 
 # load original config settings
 # shellcheck disable=SC1091
-. /config/donoteditthisfile.conf
+. /config/.donoteditthisfile.conf
 
 # set default validation to http
 if [ -z "$VALIDATION" ]; then
@@ -125,11 +127,25 @@ if [ -z "$VALIDATION" ]; then
   echo "VALIDATION parameter not set; setting it to http"
 fi
 
-# if staging is set to true, use the staging server
-if [ "$STAGING" = "true" ]; then
+# if zerossl is selected or staging is set to true, use the relevant server
+if [ "$CERTPROVIDER" = "zerossl" ] && [ "$STAGING" = "true" ]; then
+  echo "ZeroSSL does not support staging mode, ignoring STAGING variable"
+fi
+if [ "$CERTPROVIDER" = "zerossl" ] && [ -n "$EMAIL" ]; then
+  echo "ZeroSSL is selected as the cert provider, registering cert with $EMAIL"
+  EAB_CREDS=$(curl -s https://api.zerossl.com/acme/eab-credentials-email --data "email=$EMAIL")
+  ZEROSSL_EAB_KID=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_kid'])")
+  ZEROSSL_EAB_HMAC_KEY=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_hmac_key'])")
+  ACMESERVER="https://acme.zerossl.com/v2/DV90 --eab-kid ${ZEROSSL_EAB_KID} --eab-hmac-key ${ZEROSSL_EAB_HMAC_KEY}"
+elif [ "$CERTPROVIDER" = "zerossl" ] && [ -z "$EMAIL" ]; then
+  echo "ZeroSSL is selected as the cert provider, but the e-mail address has not been entered. Please visit https://zerossl.com, register a new account and set the account e-mail address in the EMAIL environment variable"
+  sleep infinity
+elif [ "$STAGING" = "true" ]; then
   echo "NOTICE: Staging is active"
+  echo "Using Let's Encrypt as the cert provider"
   ACMESERVER="https://acme-staging-v02.api.letsencrypt.org/directory"
 else
+  echo "Using Let's Encrypt as the cert provider"
   ACMESERVER="https://acme-v02.api.letsencrypt.org/directory"
 fi
 
@@ -235,20 +251,30 @@ else
 fi
 
 # checking for changes in cert variables, revoking certs if necessary
-if [ ! "$URL" = "$ORIGURL" ] || [ ! "$SUBDOMAINS" = "$ORIGSUBDOMAINS" ] || [ ! "$ONLY_SUBDOMAINS" = "$ORIGONLY_SUBDOMAINS" ] || [ ! "$EXTRA_DOMAINS" = "$ORIGEXTRA_DOMAINS" ] || [ ! "$VALIDATION" = "$ORIGVALIDATION" ] || [ ! "$DNSPLUGIN" = "$ORIGDNSPLUGIN" ] || [ ! "$PROPAGATION" = "$ORIGPROPAGATION" ] || [ ! "$STAGING" = "$ORIGSTAGING" ] || [ ! "$DUCKDNSTOKEN" = "$ORIGDUCKDNSTOKEN" ]; then
+if [ ! "$URL" = "$ORIGURL" ] || [ ! "$SUBDOMAINS" = "$ORIGSUBDOMAINS" ] || [ ! "$ONLY_SUBDOMAINS" = "$ORIGONLY_SUBDOMAINS" ] || [ ! "$EXTRA_DOMAINS" = "$ORIGEXTRA_DOMAINS" ] || [ ! "$VALIDATION" = "$ORIGVALIDATION" ] || [ ! "$DNSPLUGIN" = "$ORIGDNSPLUGIN" ] || [ ! "$PROPAGATION" = "$ORIGPROPAGATION" ] || [ ! "$STAGING" = "$ORIGSTAGING" ] || [ ! "$DUCKDNSTOKEN" = "$ORIGDUCKDNSTOKEN" ] || [ ! "$CERTPROVIDER" = "$ORIGCERTPROVIDER" ]; then
   echo "Different validation parameters entered than what was used before. Revoking and deleting existing certificate, and an updated one will be created"
   if [ "$ORIGONLY_SUBDOMAINS" = "true" ] && [ ! "$ORIGSUBDOMAINS" = "wildcard" ]; then
     ORIGDOMAIN="$(echo "$ORIGSUBDOMAINS" | tr ',' ' ' | awk '{print $1}').${ORIGURL}"
-    [[ -f /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem ]] && certbot revoke --non-interactive --cert-path /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem
   else
-    [[ -f /config/etc/letsencrypt/live/"$ORIGURL"/fullchain.pem ]] && certbot revoke --non-interactive --cert-path /config/etc/letsencrypt/live/"$ORIGURL"/fullchain.pem
+    ORIGDOMAIN="$ORIGURL"
   fi
+  if [ "$ORIGCERTPROVIDER" = "zerossl" ] && [ -n "$ORIGEMAIL" ]; then
+    REV_EAB_CREDS=$(curl -s https://api.zerossl.com/acme/eab-credentials-email --data "email=$ORIGEMAIL")
+    REV_ZEROSSL_EAB_KID=$(echo "$REV_EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_kid'])")
+    REV_ZEROSSL_EAB_HMAC_KEY=$(echo "$REV_EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_hmac_key'])")
+    REV_ACMESERVER="https://acme.zerossl.com/v2/DV90 --eab-kid ${REV_ZEROSSL_EAB_KID} --eab-hmac-key ${REV_ZEROSSL_EAB_HMAC_KEY}"
+  elif [ "$ORIGSTAGING" = "true" ]; then
+    REV_ACMESERVER="https://acme-staging-v02.api.letsencrypt.org/directory"
+  else
+    REV_ACMESERVER="https://acme-v02.api.letsencrypt.org/directory"
+  fi
+  [[ -f /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem ]] && certbot revoke --non-interactive --cert-path /config/etc/letsencrypt/live/"$ORIGDOMAIN"/fullchain.pem --server $REV_ACMESERVER
   rm -rf /config/etc/letsencrypt
   mkdir -p /config/etc/letsencrypt
 fi
 
 # saving new variables
-echo -e "ORIGURL=\"$URL\" ORIGSUBDOMAINS=\"$SUBDOMAINS\" ORIGONLY_SUBDOMAINS=\"$ONLY_SUBDOMAINS\" ORIGEXTRA_DOMAINS=\"$EXTRA_DOMAINS\" ORIGVALIDATION=\"$VALIDATION\" ORIGDNSPLUGIN=\"$DNSPLUGIN\" ORIGPROPAGATION=\"$PROPAGATION\" ORIGSTAGING=\"$STAGING\" ORIGDUCKDNSTOKEN=\"$DUCKDNSTOKEN\"" >/config/donoteditthisfile.conf
+echo -e "ORIGURL=\"$URL\" ORIGSUBDOMAINS=\"$SUBDOMAINS\" ORIGONLY_SUBDOMAINS=\"$ONLY_SUBDOMAINS\" ORIGEXTRA_DOMAINS=\"$EXTRA_DOMAINS\" ORIGVALIDATION=\"$VALIDATION\" ORIGDNSPLUGIN=\"$DNSPLUGIN\" ORIGPROPAGATION=\"$PROPAGATION\" ORIGSTAGING=\"$STAGING\" ORIGDUCKDNSTOKEN=\"$DUCKDNSTOKEN\" ORIGCERTPROVIDER=\"$CERTPROVIDER\" ORIGEMAIL=\"$EMAIL\"" >/config/.donoteditthisfile.conf
 
 # alter extension for error message
 if [ "$DNSPLUGIN" = "google" ]; then
