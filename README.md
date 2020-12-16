@@ -11,6 +11,7 @@ This image also has most Nextcloud dependencies installed, removing the need to 
 | Nginx | 1.18.0 |
 | PHP | 7.4 |
 | s6-overlay | 2.1.0.2 |
+
 *See *package_versions.txt* for more detail
 
 ## Custom Commands
