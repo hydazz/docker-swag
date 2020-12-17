@@ -1,20 +1,11 @@
-name: Docker Update CI
+name: New Docker Update CI
 
 on:
-  schedule:
-    - cron:  '5 0 * * 0'
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**/README.md'
-      - '**/package_versions.txt'
-      - '.github/**'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
 
@@ -27,12 +18,14 @@ jobs:
         DOCKERHUB_IMAGE: vcxpz/swag
         DOCKERIMAGE_TAG: latest
       run: |
+        mkdir /tmp/workdir
         echo "::set-output name=GIT_USER::$GIT_USER"
         echo "::set-output name=GIT_REPO::$GIT_REPO"
         echo "::set-output name=GIT_BRANCH::$GIT_BRANCH"
         echo "::set-output name=DOCKERHUB_IMAGE::$DOCKERHUB_IMAGE"
         echo "::set-output name=DOCKERIMAGE_TAG::$DOCKERIMAGE_TAG"
         echo "::set-output name=VERSION::$(curl --silent "https://api.github.com/repos/linuxserver/$GIT_REPO/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
+        echo "::set-output name=OVERLAY_VERSION::$(curl --silent "https://api.github.com/repos/just-containers/s6-overlay/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
 
     - name: Docker Login
       env:
@@ -52,9 +45,8 @@ jobs:
         GIT_USER: ${{ steps.variables.outputs.GIT_USER }}
         GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
         GIT_BRANCH: ${{ steps.variables.outputs.GIT_BRANCH }}
-        DOCKERHUB_IMAGE: ${{ steps.variables.outputs.DOCKERHUB_IMAGE }}
+        DOCKERHUB_IMAGE: ${{ steps.variables.outputs.DOCKERHUB_IMAGE}}
       run: |
-        mkdir /tmp/workdir
         docker run --rm --entrypoint '/bin/sh' -v /tmp/workdir:/tmp "$DOCKERHUB_IMAGE":cibuild -c '\
             apk info -v | sort >/tmp/package_versions.txt'
         git clone -b $GIT_BRANCH https://github.com/"$GIT_USER"/"$GIT_REPO".git /tmp/workdir/"$GIT_REPO"
@@ -68,6 +60,21 @@ jobs:
       run: |
         echo "::set-output name=PACKAGES_OLD_MD5::$(md5sum package_versions.txt | awk '{ print $1 }')"
         echo "::set-output name=PACKAGES_NEW_MD5::$(md5sum /tmp/workdir/package_versions.txt | awk '{ print $1 }')"
+
+    - name: Update README.md
+      if: steps.md5.outputs.PACKAGES_NEW_MD5 != steps.md5.outputs.PACKAGES_NEW_MD5
+      env:
+        GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
+        OVERLAY_VERSION: ${{ steps.variables.outputs.OVERLAY_VERSION }}
+      run: |
+        FILE="/tmp/workdir/package_versions.txt"
+        NGINX_VERSION=$(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$')
+        PHP_VERSION=$(php -r 'echo PHP_VERSION;')
+        sed -i \
+          -e "s/s6--overlay-.*?-/s6--overlay-${OVERLAY_VERSION}-/g" \
+          -e "s/nginx-.*?-/nginx-${NGINX_VERSION}-/g" \
+          -e "s/php-.*?-/php-${PHP_VERSION}-/g" \
+          ~/Desktop/docker-swag/README.md
 
     - name: Push Changes To Github
       if: steps.md5.outputs.PACKAGES_NEW_MD5 != steps.md5.outputs.PACKAGES_NEW_MD5
