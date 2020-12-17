@@ -11,14 +11,14 @@ ENV DHLEVEL=2048 ONLY_SUBDOMAINS=false
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN \
- echo "**** Install Build Packages ****" && \
+ echo "**** install build packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
 	g++ \
 	gcc \
 	libffi-dev \
 	openssl-dev \
 	python3-dev && \
- echo "**** Install Runtime Packages ****" && \
+ echo "**** install packages ****" && \
  apk add --no-cache --upgrade \
 	curl \
 	apache2-utils \
@@ -110,7 +110,7 @@ RUN \
   sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf && \
   sed -i 's#/usr/sbin/logrotate /etc/logrotate.conf#/usr/sbin/logrotate /etc/logrotate.conf -s /config/log/logrotate.status#g' \
  	/etc/periodic/daily/logrotate && \
- echo "**** Install Certbot Plugins ****" && \
+ echo "**** install certbot plugins ****" && \
  pip3 install -U \
 	pip && \
  pip3 install -U \
@@ -137,14 +137,14 @@ RUN \
 	certbot-plugin-gandi \
 	cryptography \
 	requests && \
- echo "**** Remove Unnecessary Fail2ban Filters ****" && \
+ echo "**** remove unnecessary fail2ban filters ****" && \
  rm \
 	/etc/fail2ban/jail.d/alpine-ssh.conf && \
- echo "**** Copy Fail2ban Default Action and Filter to /default ****" && \
+ echo "**** copy fail2ban default action and filter to /default ****" && \
  mkdir -p /defaults/fail2ban && \
  mv /etc/fail2ban/action.d /defaults/fail2ban/ && \
  mv /etc/fail2ban/filter.d /defaults/fail2ban/ && \
- echo "**** Copy Proxy Confs to /default ****" && \
+ echo "**** copy proxy confs to /default ****" && \
  mkdir -p /defaults/proxy-confs && \
  curl -o \
 	/tmp/proxy.tar.gz -L \
@@ -152,17 +152,17 @@ RUN \
  tar xf \
 	/tmp/proxy.tar.gz -C \
 	/defaults/proxy-confs --strip-components=1 --exclude=linux*/.gitattributes --exclude=linux*/.github --exclude=linux*/.gitignore --exclude=linux*/LICENSE && \
- echo "**** Configure NGINX ****" && \
+ echo "**** configure nginx ****" && \
  rm -f /etc/nginx/conf.d/default.conf && \
  curl -o \
 	/defaults/dhparams.pem -L \
 	"https://lsio.ams3.digitaloceanspaces.com/dhparams.pem" && \
- echo "**** Cleanup ****" && \
+ echo "**** cleanup ****" && \
  for cleanfiles in *.pyc *.pyo; \
 	do \
 	find /usr/lib/python3.*  -iname "${cleanfiles}" -exec rm -f '{}' + \
 	; done && \
- echo "**** Install build packages for Nextcloud ****" && \
+ echo "**** install build packages for nextcloud ****" && \
  apk add --no-cache --virtual=build-dependencies-nextcloud --upgrade \
   	autoconf \
   	automake \
@@ -174,7 +174,7 @@ RUN \
   	re2c \
   	samba-dev \
   	zlib-dev && \
- echo "**** Compile smbclient ****" && \
+ echo "**** compile smbclient ****" && \
  git clone git://github.com/eduardok/libsmbclient-php.git /tmp/smbclient && \
  cd /tmp/smbclient && \
  phpize7 && \
@@ -182,13 +182,13 @@ RUN \
 	--with-php-config=/usr/bin/php-config7 && \
  make && \
  make install && \
- echo "**** Configure PHP and NGINX for Nextcloud ****" && \
+ echo "**** configure php and nginx for Nextcloud ****" && \
  echo "extension="smbclient.so"" > /etc/php7/conf.d/00_smbclient.ini && \
  echo 'apc.enable_cli=1' >> /etc/php7/conf.d/apcu.ini && \
  sed -i \
 	'/opcache.enable=1/a opcache.enable_cli=1' \
 		/etc/php7/php.ini && \
- echo "**** Cleanup ****" && \
+ echo "**** cleanup ****" && \
  apk del --purge \
 	build-dependencies \
 	build-dependencies-nextcloud && \
