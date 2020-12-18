@@ -156,6 +156,7 @@ php7-curl-7.4.13-r1
 php7-dom-7.4.13-r1
 php7-exif-7.4.13-r1
 php7-fileinfo-7.4.13-r1
+php7-fpm-7.4.13-r1
 php7-ftp-7.4.13-r1
 php7-gd-7.4.13-r1
 php7-iconv-7.4.13-r1
