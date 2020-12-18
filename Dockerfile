@@ -45,8 +45,6 @@ RUN \
      php7-soap \
      php7-sockets \
      php7-tokenizer \
-     php7-xml \
-     php7-xmlrpc \
      php7-xsl \
 	py3-cryptography \
 	py3-future \
