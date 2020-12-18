@@ -50,8 +50,8 @@ jobs:
       run: |
         docker run --rm --entrypoint '/bin/sh' -v /tmp/workdir:/tmp "$DOCKERHUB_IMAGE":cibuild -c "\
             apk info -v | sort >/tmp/package_versions.txt && \
-            echo $(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$') >/tmp/nginx_version.txt && \
-            echo $(php -r 'echo PHP_VERSION;') >/tmp/php_version.txt"
+            echo $(nginx -v 2>&1) | grep -o '[0-9.]*$' >/tmp/nginx_version.txt && \
+            php -v | grep ^PHP | cut -d' ' -f2 >/tmp/php_version.txt"
         git clone -b $GIT_BRANCH https://github.com/"$GIT_USER"/"$GIT_REPO".git /tmp/workdir/"$GIT_REPO"
         cd /tmp/workdir/"$GIT_REPO"
         if [ ! -f package_versions.txt ]; then \
