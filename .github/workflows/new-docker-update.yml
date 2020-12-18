@@ -48,10 +48,10 @@ jobs:
         GIT_BRANCH: ${{ steps.variables.outputs.GIT_BRANCH }}
         DOCKERHUB_IMAGE: ${{ steps.variables.outputs.DOCKERHUB_IMAGE}}
       run: |
-        docker run --rm --entrypoint '/bin/sh' -v /tmp/workdir:/tmp "$DOCKERHUB_IMAGE":cibuild -c '\
+        docker run --rm --entrypoint '/bin/sh' -v /tmp/workdir:/tmp "$DOCKERHUB_IMAGE":cibuild -c "\
             apk info -v | sort >/tmp/package_versions.txt && \
             echo $(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$') >/tmp/nginx_version.txt && \
-            echo $(php -r 'echo PHP_VERSION;') >/tmp/php_version.txt'
+            echo $(php -r 'echo PHP_VERSION;') >/tmp/php_version.txt"
         git clone -b $GIT_BRANCH https://github.com/"$GIT_USER"/"$GIT_REPO".git /tmp/workdir/"$GIT_REPO"
         cd /tmp/workdir/"$GIT_REPO"
         if [ ! -f package_versions.txt ]; then \
@@ -70,8 +70,6 @@ jobs:
         PHP_VERSION: ${{ steps.packages.outputs.PHP_VERSION }}
       run: |
         echo "::set-output name=README_OLD_MD5::$(md5sum README.md | awk '{ print $1 }')"
-        NGINX_VERSION=$(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$')
-        PHP_VERSION=$(php -r 'echo PHP_VERSION;')
         sed -i \
           -e "s/s6--overlay-[0-9].[0-9].[0-9].[0-9]/s6--overlay-${OVERLAY_VERSION}/g" \
           -e "s/nginx-[0-9].[0-9][0-9].[0-9]/nginx-${NGINX_VERSION}/g" \
