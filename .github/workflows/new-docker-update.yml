@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  master:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
@@ -40,7 +40,8 @@ jobs:
       run: |
         docker build --no-cache --pull . --file Dockerfile --build-arg VERSION="$VERSION" --build-arg BUILD_DATE="$(date +%Y-%m-%d)" --tag "$DOCKERHUB_IMAGE":cibuild
 
-    - name: Get The Goods From The Image
+    - name: Get New Packages From Image
+      id: packages
       env:
         GIT_USER: ${{ steps.variables.outputs.GIT_USER }}
         GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
@@ -48,49 +49,64 @@ jobs:
         DOCKERHUB_IMAGE: ${{ steps.variables.outputs.DOCKERHUB_IMAGE}}
       run: |
         docker run --rm --entrypoint '/bin/sh' -v /tmp/workdir:/tmp "$DOCKERHUB_IMAGE":cibuild -c '\
-            apk info -v | sort >/tmp/package_versions.txt'
+            apk info -v | sort >/tmp/package_versions.txt && \
+            echo $(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$') >/tmp/nginx_version.txt && \
+            echo $(php -r 'echo PHP_VERSION;') >/tmp/php_version.txt'
         git clone -b $GIT_BRANCH https://github.com/"$GIT_USER"/"$GIT_REPO".git /tmp/workdir/"$GIT_REPO"
         cd /tmp/workdir/"$GIT_REPO"
         if [ ! -f package_versions.txt ]; then \
           touch package_versions.txt; \
         fi
-
-    - name: Set MD5 Variables
-      id: md5
-      run: |
         echo "::set-output name=PACKAGES_OLD_MD5::$(md5sum package_versions.txt | awk '{ print $1 }')"
         echo "::set-output name=PACKAGES_NEW_MD5::$(md5sum /tmp/workdir/package_versions.txt | awk '{ print $1 }')"
+        echo "::set-output name=NGINX_VERSION::$(cat /tmp/workdir/nginx_version.txt)"
+        echo "::set-output name=PHP_VERSION::$(cat /tmp/workdir/php_version.txt)"
 
     - name: Update README.md
-      if: steps.md5.outputs.PACKAGES_NEW_MD5 != steps.md5.outputs.PACKAGES_NEW_MD5
+      id: readme
       env:
-        GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
         OVERLAY_VERSION: ${{ steps.variables.outputs.OVERLAY_VERSION }}
+        NGINX_VERSION: ${{ steps.packages.outputs.NGINX_VERSION }}
+        PHP_VERSION: ${{ steps.packages.outputs.PHP_VERSION }}
       run: |
-        FILE="/tmp/workdir/package_versions.txt"
+        echo "::set-output name=README_OLD_MD5::$(md5sum README.md | awk '{ print $1 }')"
         NGINX_VERSION=$(echo $(nginx -v 2>&1) | grep -o '[0-9.]*$')
         PHP_VERSION=$(php -r 'echo PHP_VERSION;')
         sed -i \
-          -e "s/s6--overlay-.*?-/s6--overlay-${OVERLAY_VERSION}-/g" \
-          -e "s/nginx-.*?-/nginx-${NGINX_VERSION}-/g" \
-          -e "s/php-.*?-/php-${PHP_VERSION}-/g" \
-          ~/Desktop/docker-swag/README.md
+          -e "s/s6--overlay-[0-9].[0-9].[0-9].[0-9]/s6--overlay-${OVERLAY_VERSION}/g" \
+          -e "s/nginx-[0-9].[0-9][0-9].[0-9]/nginx-${NGINX_VERSION}/g" \
+          -e "s/php-[0-9].[0-9].[0-9][0-9]/php-${PHP_VERSION}/g" \
+          README.md
+        echo "::set-output name=README_NEW_MD5::$(md5sum README.md | awk '{ print $1 }')"
+
+    - name: Stage README.md Changes
+      if: steps.readme.outputs.README_OLD_MD5 != steps.readme.outputs.README_NEW_MD5
+      id: push_readme
+      run: |
+        git add README.md
+        git commit -m 'Bot Updating Readme' README.md
+        echo "::set-output name=push_readme::1"
+
+    - name: Stage package_versions.txt Changes
+      if: steps.packages.outputs.PACKAGES_OLD_MD5 != steps.packages.outputs.PACKAGES_NEW_MD5
+      id: push_packageversions
+      env:
+        GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
+      run: |
+        rm package_versions.txt
+        mv /tmp/workdir/package_versions.txt package_versions.txt
+        git add package_versions.txt
+        git commit -m 'Bot Updating Package Versions' package_versions.txt
+        echo "::set-output name=push_packageversions::1"
 
     - name: Push Changes To Github
-      if: steps.md5.outputs.PACKAGES_NEW_MD5 != steps.md5.outputs.PACKAGES_NEW_MD5
+      if: steps.push_readme.outputs.push_readme || steps.push_packageversions.outputs.push_packageversions == 1
       env:
         GIT_USER: ${{ steps.variables.outputs.GIT_USER }}
         GIT_REPO: ${{ steps.variables.outputs.GIT_REPO }}
         GIT_BRANCH: ${{ steps.variables.outputs.GIT_BRANCH }}
         GIT_KEY: ${{ secrets.GIT_KEY }}
       run: |
-        cd /tmp/workdir/"$GIT_REPO"/
-        rm package_versions.txt
-        mv /tmp/workdir/package_versions.txt package_versions.txt
-        git config --global user.email "alexanderhyde@icloud.com"
-        git config --global user.name "$GIT_USER"
-        git add package_versions.txt
-        git commit -m 'Bot Updating Package Versions'
         git push https://"$GIT_USER":"$GIT_KEY"@github.com/"$GIT_USER"/"$GIT_REPO".git $GIT_BRANCH
 
     - name: Tag And Push Docker Image
