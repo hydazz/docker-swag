@@ -8,7 +8,7 @@ This image also has most Nextcloud dependencies installed, removing the need to 
 
 ## Version Information
 
-![alpine](https://img.shields.io/badge/alpine-edge-0D597F?style=for-the-badge&logo=alpine-linux) ![s6overlay](https://img.shields.io/badge/s6--overlay-v1.1.1.1-blue?style=for-the-badge) ![nginx](https://img.shields.io/badge/nginx--269539?style=for-the-badge&logo=nginx) ![php](https://img.shields.io/badge/php-7.4.13-777BB4?style=for-the-badge&logo=php)
+![alpine](https://img.shields.io/badge/alpine-edge-0D597F?style=for-the-badge&logo=alpine-linux) ![s6overlay](https://img.shields.io/badge/s6--overlay-v2.1.0.2-blue?style=for-the-badge) ![nginx](https://img.shields.io/badge/nginx-1.18.0-269539?style=for-the-badge&logo=nginx) ![php](https://img.shields.io/badge/php-7.4.13-777BB4?style=for-the-badge&logo=php)
 
 See [package_versions.txt](https://github.com/hydazz/docker-swag/blob/main/package_versions.txt) for more detail
 
