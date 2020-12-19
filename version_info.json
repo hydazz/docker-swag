@@ -1,0 +1,5 @@
+{
+"overlay_version": "5.1.0.2",
+"nginx_version": "2.18.0",
+"php_version": "5.4.13"
+}
