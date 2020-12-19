@@ -4,7 +4,7 @@ FROM vcxpz/baseimage-alpine-nginx
 ARG BUILD_DATE
 ARG VERSION
 LABEL build_version="Fork of Linuxserver.io version:- ${VERSION} Build date:- ${BUILD_DATE}"
-LABEL maintainer="hydaz"
+LABEL maintainer="Alex Hyde"
 
 # environment settings
 ENV DHLEVEL=2048 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.ini
