@@ -30,8 +30,6 @@ RUN \
 	nginx-mod-http-geoip2 \
 	nginx-mod-http-headers-more \
 	nginx-mod-http-image-filter \
-	nginx-mod-http-lua \
-	nginx-mod-http-lua-upstream \
 	nginx-mod-http-nchan \
 	nginx-mod-http-perl \
 	nginx-mod-http-redis2 \
