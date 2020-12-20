@@ -3,12 +3,11 @@
 nginx_confs=(
   authelia-location.conf
   authelia-server.conf
-  site-confs/default.conf
   geoip2.conf
   ldap.conf
   nginx.conf
   proxy.conf
-  security.conf
+  site-confs/default
   ssl.conf)
 
 for i in ${nginx_confs[@]}; do

@@ -1,33 +1,28 @@
-## Version 2020/05/23 - Changelog: https://github.com/hydazz/docker-swag/commits/main/root/defaults/default.conf
+## Version 2020/05/23 - Changelog: https://github.com/hydazz/docker-swag/commits/main/root/defaults/default
 
 # redirect all traffic to https
 server {
-	listen 80      default_server;
+	listen 80 default_server;
 	listen [::]:80 default_server;
-
 	server_name _;
 	return 301 https://$host$request_uri;
 }
 
 # main server block
 server {
-  server_name _;
-
-	listen 443      ssl http2 default_server;
+	listen 443 ssl http2 default_server;
 	listen [::]:443 ssl http2 default_server;
 
-	error_log  /config/domains/default/logs/error.log;
-	access_log /config/domains/default/logs/access.log;
+	root /config/www;
+	index index.html index.htm index.php;
 
-	root /config/domains/default/public_html/;
-	index index.html;
+	server_name _;
 
 	# enable subfolder method reverse proxy confs
 	include /config/nginx/proxy-confs/*.subfolder.conf;
 
 	# all ssl related config moved to ssl.conf
 	include /config/nginx/ssl.conf;
-	include /config/nginx/security.conf;
 
 	# enable for ldap auth
 	#include /config/nginx/ldap.conf;
@@ -43,16 +38,16 @@ server {
 
 	client_max_body_size 0;
 
-#	location / {
-#		try_files $uri $uri/ /index.html /index.php?$args =404;
-#	}
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
 
-#	location ~ \.php$ {
-#		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-#		fastcgi_pass 127.0.0.1:9000;
-#		fastcgi_index index.php;
-#		include /etc/nginx/fastcgi_params;
-#	}
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_index index.php;
+		include /etc/nginx/fastcgi_params;
+	}
 
 # sample reverse proxy config for password protected couchpotato running at IP 192.168.1.50 port 5050 with base url "cp"
 # notice this is within the same server block as the base

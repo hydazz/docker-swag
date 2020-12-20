@@ -79,10 +79,6 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
   cp /defaults/geoip2.conf /config/nginx/geoip2.conf
 
 # Copy my custom files
-[[ ! -f /config/nginx/security.conf ]] &&
-  cp /defaults/security.conf /config/nginx/security.conf
-[[ ! -f /config/nginx/fastcgi_params ]] &&
-  cp /defaults/fastcgi_params /config/nginx/fastcgi_params
 [[ ! -f /usr/sbin/swag ]] &&
   cp /defaults/swag /usr/sbin/swag && chmod +x /usr/sbin/swag
 [[ ! -d /config/logrotate.d ]] &&
@@ -343,9 +339,3 @@ chmod -R +r /config/log
 chmod +x /app/le-renew.sh
 chmod 700 /defaults/dns-conf
 chmod 600 /defaults/dns-conf/*
-
-if ! nginx -t -c /config/nginx/nginx.conf &>/dev/null; then
-  nginx -t -c /config/nginx/nginx.conf
-  echo "[cont-init.d] 50-config: NGINX test failed, check your configs!"
-  sleep infinity
-fi
