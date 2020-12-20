@@ -81,8 +81,8 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 # Copy my custom files
 [[ ! -f /usr/sbin/swag ]] &&
   cp /defaults/swag /usr/sbin/swag && chmod +x /usr/sbin/swag
-[[ ! -d /config/logrotate.d ]] &&
-  cp -f /config/logrotate.d/* /etc/logrotate.d/
+
+cp -f /config/logrotate.d/* /etc/logrotate.d/
 
 # copy pre-generated dhparams or generate if needed
 [[ ! -f /config/nginx/dhparams.pem ]] &&
