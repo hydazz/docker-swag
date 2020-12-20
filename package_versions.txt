@@ -90,8 +90,8 @@ memcached-1.6.9-r0
 musl-1.2.2_pre6-r0
 musl-utils-1.2.2_pre6-r0
 nano-5.4-r0
-ncurses-libs-6.2_p20201212-r0
-ncurses-terminfo-base-6.2_p20201212-r0
+ncurses-libs-6.2_p20201219-r0
+ncurses-terminfo-base-6.2_p20201219-r0
 nettle-3.6-r0
 nghttp2-libs-1.42.0-r0
 nginx-1.18.0-r10
