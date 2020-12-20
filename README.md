@@ -1,3 +1,4 @@
+
 ## Alpine Edge fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
 
 SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes (Let's Encrypt and ZeroSSL). It also contains fail2ban for intrusion prevention.
@@ -25,17 +26,3 @@ This image also features the *swag* command, which is a bash script I made so yo
 | Restart Nginx | swag nginx restart |
 | Restart PHP-FPM | swag php restart |
 | Test php.ini | swag php test |
-
-## Folder Changes
-
-This image has the following new folders:
-
-    config/
-    ├─ domains/
-    │  ├─ example.com/
-    │  │  ├─ logs/ <- example.com logs
-    │  │  │  ├─ error.log
-    │  │  │  ├─ access.log
-    │  │  ├─ public_html/ <- webroot folder
-    ├─ logrotate.d/ <- contents are copied to /etc/logrotate.d
-Rather than the folder *www* this image uses *domains*, in where you can put your domains, such as example.com. There is also the *logrotate.d* folder, contents of this folder will be copied to */etc/logrotate.d*, this will overwrite any folders in the */etc/logrotate.d* folder if the filename matches.
