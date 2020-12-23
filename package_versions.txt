@@ -161,6 +161,7 @@ php7-intl-7.4.13-r1
 php7-json-7.4.13-r1
 php7-ldap-7.4.13-r1
 php7-mbstring-7.4.13-r1
+php7-mysqli-7.4.13-r1
 php7-mysqlnd-7.4.13-r1
 php7-opcache-7.4.13-r1
 php7-openssl-7.4.13-r1
