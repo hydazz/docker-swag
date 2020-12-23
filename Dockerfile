@@ -57,6 +57,8 @@ RUN \
       php7-ldap \
       php7-mcrypt \
       php7-memcached \
+      php7-mysqli \
+      php7-mysqlnd \
       php7-opcache \
       php7-pdo_mysql \
       php7-pdo_odbc \
