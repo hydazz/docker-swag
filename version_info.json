@@ -1,5 +1,5 @@
 {
-"overlay_version": "2.1.0.2",
-"nginx_version": "1.18.0",
-"php_version": "7.4.13"
+"overlay_version": "overlayversion",
+"nginx_version": "nginxversion",
+"php_version": "phpversion"
 }
