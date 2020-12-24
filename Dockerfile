@@ -20,12 +20,9 @@ RUN \
       python3-dev && \
    echo "**** install runtime packages ****" && \
    apk add --no-cache --upgrade \
-      curl \
       fail2ban \
       gnupg \
-      imagemagick \
       memcached \
-      nginx \
       nginx-mod-http-echo \
       nginx-mod-http-fancyindex \
       nginx-mod-http-geoip2 \
@@ -51,7 +48,6 @@ RUN \
       php7-ftp \
       php7-gd \
       php7-iconv \
-      php7-imagick \
       php7-imap \
       php7-intl \
       php7-ldap \
@@ -62,7 +58,6 @@ RUN \
       php7-opcache \
       php7-pdo_mysql \
       php7-pdo_odbc \
-      php7-pear \
       php7-pecl-apcu \
       php7-pecl-redis \
       php7-phar \
