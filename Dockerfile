@@ -19,7 +19,7 @@ RUN \
       openssl-dev \
       python3-dev && \
    echo "**** install runtime packages ****" && \
-   apk add --no-cache --upgrade \
+   apk add --no-cache \
       fail2ban \
       gnupg \
       memcached \
