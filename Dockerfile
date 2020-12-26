@@ -19,7 +19,7 @@ RUN \
       openssl-dev \
       python3-dev && \
    echo "**** install runtime packages ****" && \
-   apk add --no-cache \
+   apk add --no-cache --upgrade \
       fail2ban \
       gnupg \
       memcached \
@@ -49,6 +49,7 @@ RUN \
       php7-gd \
       php7-iconv \
       php7-imap \
+      php7-imagick \
       php7-intl \
       php7-ldap \
       php7-mcrypt \
