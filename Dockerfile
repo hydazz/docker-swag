@@ -121,7 +121,7 @@ RUN \
    echo "**** configure nginx ****" && \
    rm -f /etc/nginx/conf.d/default.conf && \
    curl -o \
-   /defaults/dhparams.pem -L \
+      /defaults/dhparams.pem -L \
       "https://lsio.ams3.digitaloceanspaces.com/dhparams.pem" && \
    echo "**** cleanup ****" && \
    apk del --purge \
