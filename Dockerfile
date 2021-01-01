@@ -7,8 +7,11 @@ LABEL build_version="Fork of Linuxserver.io version:- ${VERSION} Build-date:- ${
 LABEL maintainer="Alex Hyde"
 
 # environment settings
-ENV DHLEVEL=2048 ONLY_SUBDOMAINS=false AWS_CONFIG_FILE=/config/dns-conf/route53.ini
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+ENV \
+   DHLEVEL=2048 \
+   ONLY_SUBDOMAINS=false \
+   AWS_CONFIG_FILE=/config/dns-conf/route53.ini \
+   S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN \
    echo "**** install build packages ****" && \
