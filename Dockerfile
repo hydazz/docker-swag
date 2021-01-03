@@ -52,17 +52,17 @@ RUN \
       php7-gd \
       php7-iconv \
       php7-imap \
-      php7-imagick \
       php7-intl \
       php7-ldap \
-      php7-mcrypt \
-      php7-memcached \
       php7-mysqli \
       php7-mysqlnd \
       php7-opcache \
       php7-pdo_mysql \
       php7-pdo_odbc \
       php7-pecl-apcu \
+      php7-pecl-imagick \
+      php7-pecl-mcrypt \
+      php7-pecl-memcached \
       php7-pecl-redis \
       php7-phar \
       php7-posix \
