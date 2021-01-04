@@ -1,25 +1,33 @@
-#!/bin/bash
-CMD=$1
-VAR=$2
+#!/usr/bin/with-contenv bash
 
-if [ "$CMD" = "nginx" ]; then
-  if [ "$VAR" = "restart" ]; then
-    echo "Restarting Nginx"
-    s6-svc -h /var/run/s6/services/nginx
-    echo "It is recommended to restart the container if you are experiencing issues"
-  fi
-  if [ "$VAR" = "test" ]; then
-    nginx -t -c /config/nginx/nginx.conf
-  fi
+if [ ! "$1" = "nginx" ] || [ ! "$1" = "php" ]; then
+	echo "$1 is an unknown service, supported services are nginx and php"
+	exit 1
 fi
 
-if [ "$CMD" = "php" ]; then
-  if [ "$VAR" = "restart" ]; then
-    echo "Restarting PHP-FPM"
-    s6-svc -t /var/run/s6/services/php-fpm
-    echo "It is recommended to restart the container if you are experiencing issues"
-  fi
-  if [ "$VAR" = "test" ]; then
-    php -e -c /etc/php7/php.ini -r 'echo "PHP Configuration OK\n";'
-  fi
+if [ ! "$2" = "test" ] || [ ! "$2" = "restart" ]; then
+	echo "$2 is an unknown command, supported commands are test and restart"
+	exit 1
+fi
+
+if [ "$1" = "nginx" ]; then
+	if [ "$2" = "restart" ]; then
+		echo "Restarting Nginx"
+		s6-svc -h /var/run/s6/services/nginx
+		echo "Restarted Nginx"
+	fi
+	if [ "$2" = "test" ]; then
+		nginx -t -c /config/nginx/nginx.conf
+	fi
+fi
+
+if [ "$1" = "php" ]; then
+	if [ "$2" = "restart" ]; then
+		echo "Restarting PHP-FPM"
+		s6-svc -t /var/run/s6/services/php-fpm
+		echo "Restarted PHP"
+	fi
+	if [ "$2" = "test" ]; then
+		php -e -c /etc/php7/php.ini -r 'echo "PHP Configuration OK\n";'
+	fi
 fi
