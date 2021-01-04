@@ -1,33 +1,29 @@
 #!/usr/bin/with-contenv bash
 
-if [ ! "$1" = "nginx" ] || [ ! "$1" = "php" ]; then
-	echo "$1 is an unknown service, supported services are nginx and php"
-	exit 1
-fi
+SRV=$1
+CMD=$2
 
-if [ ! "$2" = "test" ] || [ ! "$2" = "restart" ]; then
-	echo "$2 is an unknown command, supported commands are test and restart"
-	exit 1
-fi
-
-if [ "$1" = "nginx" ]; then
-	if [ "$2" = "restart" ]; then
+if [ "$SRV" = "nginx" ]; then
+	if [ "$CMD" = "restart" ]; then
 		echo "Restarting Nginx"
-		s6-svc -h /var/run/s6/services/nginx
-		echo "Restarted Nginx"
+		s6-svc -h /CMD/run/s6/services/nginx
+		exit 0
 	fi
-	if [ "$2" = "test" ]; then
+	if [ "$CMD" = "test" ]; then
 		nginx -t -c /config/nginx/nginx.conf
+		exit 0
 	fi
 fi
-
-if [ "$1" = "php" ]; then
-	if [ "$2" = "restart" ]; then
+if [ "$SRV" = "php" ]; then
+	if [ "$CMD" = "restart" ]; then
 		echo "Restarting PHP-FPM"
-		s6-svc -t /var/run/s6/services/php-fpm
-		echo "Restarted PHP"
+		s6-svc -t /CMD/run/s6/services/php-fpm
+		exit 0
 	fi
-	if [ "$2" = "test" ]; then
+	if [ "$CMD" = "test" ]; then
 		php -e -c /etc/php7/php.ini -r 'echo "PHP Configuration OK\n";'
+		exit 0
 	fi
 fi
+echo "Invalid usage, use 'swag <nginx/php> <restart/test>'"
+exit 1
