@@ -6,7 +6,7 @@ CMD=$2
 if [ "$SRV" = "nginx" ]; then
 	if [ "$CMD" = "restart" ]; then
 		echo "Restarting Nginx"
-		s6-svc -h /CMD/run/s6/services/nginx
+		s6-svc -h /var/run/s6/services/nginx
 		exit 0
 	fi
 	if [ "$CMD" = "test" ]; then
@@ -17,7 +17,7 @@ fi
 if [ "$SRV" = "php" ]; then
 	if [ "$CMD" = "restart" ]; then
 		echo "Restarting PHP-FPM"
-		s6-svc -t /CMD/run/s6/services/php-fpm
+		s6-svc -t /var/run/s6/services/php-fpm
 		exit 0
 	fi
 	if [ "$CMD" = "test" ]; then
