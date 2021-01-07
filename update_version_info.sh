@@ -9,10 +9,10 @@ OLD_NGINX_VERSION=$(cat version_info.json | jq -r .nginx_version)
 OLD_PHP_VERSION=$(cat version_info.json | jq -r .php_version)
 
 sed -i \
-  -e "s/${OLD_OVERLAY_VERSION}/${OVERLAY_VERSION}/g" \
-  -e "s/${OLD_NGINX_VERSION}/${NGINX_VERSION}/g" \
-  -e "s/${OLD_PHP_VERSION}/${PHP_VERSION}/g" \
-  README.md
+	-e "s/${OLD_OVERLAY_VERSION}/${OVERLAY_VERSION}/g" \
+	-e "s/${OLD_NGINX_VERSION}/${NGINX_VERSION}/g" \
+	-e "s/${OLD_PHP_VERSION}/${PHP_VERSION}/g" \
+	README.md
 
 NEW_VERSION_INFO="overlay_version|nginx_version|php_version
 ${OVERLAY_VERSION}|${NGINX_VERSION}|${PHP_VERSION}"
