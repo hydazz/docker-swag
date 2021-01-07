@@ -18,7 +18,7 @@ jobs:
         id: variables
         env:
           DOCKERHUB_USER: vcxpz
-          DOCKERHUB_IMAGE: maintenance
+          DOCKERHUB_IMAGE: swag
           DOCKERIMAGE_TAG: latest
         run: |
           echo "DOCKERHUB_IMAGE=${DOCKERHUB_IMAGE}" >>$GITHUB_ENV
