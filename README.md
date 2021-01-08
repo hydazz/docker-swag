@@ -36,6 +36,8 @@ docker run -d \
   vcxpz/swag
 ```
 
+**Read the official [README](https://github.com/linuxserver/docker-swag/) for more information**
+
 ## Custom Commands
 ### *swag* Command
 This image also features the *swag* command, which is a script I made so you don't have to restart the whole container to apply configuration changes or to test the configuration.
@@ -48,5 +50,3 @@ This image also features the *swag* command, which is a script I made so you don
 | Restart Nginx | swag nginx restart |
 | Restart PHP-FPM | swag php restart |
 | Test php.ini | swag php test |
-
-**Read the official [README](https://github.com/linuxserver/docker-swag/) for more information**
