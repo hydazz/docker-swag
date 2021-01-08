@@ -13,7 +13,7 @@ ENV \
    AWS_CONFIG_FILE=/config/dns-conf/route53.ini \
    S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
-RUN \
+RUN set -x && \
    echo "**** install build packages ****" && \
    apk add --no-cache --virtual=build-dependencies \
       g++ \
