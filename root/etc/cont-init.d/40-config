@@ -78,10 +78,6 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 [[ ! -f /config/nginx/geoip2.conf ]] &&
 	cp /defaults/geoip2.conf /config/nginx/geoip2.conf
 
-# Copy my custom files
-[[ ! -f /usr/sbin/swag ]] &&
-	cp /defaults/swag /usr/sbin/swag && chmod +x /usr/sbin/swag
-
 cp -f /config/logrotate.d/* /etc/logrotate.d/
 
 # copy pre-generated dhparams or generate if needed
