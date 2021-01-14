@@ -2,8 +2,8 @@ FROM vcxpz/baseimage-alpine-nginx
 
 # set version label
 ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="Fork of Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+ARG SWAG_RELEASE
+LABEL build_version="Fork of Linuxserver.io version:- ${SWAG_RELEASE} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="hydaz"
 
 # environment settings
