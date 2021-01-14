@@ -21,6 +21,7 @@ docker run -d \
   -e URL=yourdomain.url \
   -e SUBDOMAINS=www, \
   -e VALIDATION=http \
+  -e CERTPROVIDER= `#optional` \
   -e DNSPLUGIN=cloudflare `#optional` \
   -e PROPAGATION= `#optional` \
   -e DUCKDNSTOKEN= `#optional` \

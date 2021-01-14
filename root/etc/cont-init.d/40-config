@@ -77,7 +77,10 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 	cp /defaults/authelia-location.conf /config/nginx/authelia-location.conf
 [[ ! -f /config/nginx/geoip2.conf ]] &&
 	cp /defaults/geoip2.conf /config/nginx/geoip2.conf
-
+[[ ! -f /config/www/502.html ]] &&
+	cp /defaults/502.html /config/www/502.html
+[[ ! -f /etc/conf.d/libmaxminddb ]] &&
+	cp /defaults/libmaxminddb /etc/conf.d/libmaxminddb
 cp -f /config/logrotate.d/* /etc/logrotate.d/
 
 # copy pre-generated dhparams or generate if needed
@@ -125,10 +128,7 @@ if [ "$CERTPROVIDER" = "zerossl" ] && [ "$STAGING" = "true" ]; then
 fi
 if [ "$CERTPROVIDER" = "zerossl" ] && [ -n "$EMAIL" ]; then
 	echo "ZeroSSL is selected as the cert provider, registering cert with $EMAIL"
-	EAB_CREDS=$(curl -s https://api.zerossl.com/acme/eab-credentials-email --data "email=$EMAIL")
-	ZEROSSL_EAB_KID=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_kid'])")
-	ZEROSSL_EAB_HMAC_KEY=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_hmac_key'])")
-	ACMESERVER="https://acme.zerossl.com/v2/DV90 --eab-kid ${ZEROSSL_EAB_KID} --eab-hmac-key ${ZEROSSL_EAB_HMAC_KEY}"
+	ACMESERVER="https://acme.zerossl.com/v2/DV90"
 elif [ "$CERTPROVIDER" = "zerossl" ] && [ -z "$EMAIL" ]; then
 	echo "ZeroSSL is selected as the cert provider, but the e-mail address has not been entered. Please visit https://zerossl.com, register a new account and set the account e-mail address in the EMAIL environment variable"
 	sleep infinity
@@ -189,6 +189,12 @@ else
 	EMAILPARAM="--register-unsafely-without-email"
 fi
 
+# update plugin names in dns conf inis
+sed -i 's|^certbot_dns_aliyun:||g' /defaults/dns-conf/aliyun.ini
+sed -i 's|^certbot_dns_domeneshop:||g' /defaults/dns-conf/domeneshop.ini
+sed -i 's|^certbot_dns_inwx:||g' /defaults/dns-conf/inwx.ini
+sed -i 's|^certbot_dns_transip:||g' /defaults/dns-conf/transip.ini
+
 # setting the validation method to use
 if [ "$VALIDATION" = "dns" ]; then
 	if [ "$DNSPLUGIN" = "route53" ]; then
@@ -203,10 +209,7 @@ if [ "$VALIDATION" = "dns" ]; then
 	elif [[ "$DNSPLUGIN" =~ ^(google)$ ]]; then
 		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
 		PREFCHAL="--dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.json ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(aliyun|domeneshop|inwx|transip)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--certbot-dns-${DNSPLUGIN}:dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="-a certbot-dns-${DNSPLUGIN}:dns-${DNSPLUGIN} --certbot-dns-${DNSPLUGIN}:dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(netcup|njalla)$ ]]; then
+	elif [[ "$DNSPLUGIN" =~ ^(aliyun|domeneshop|inwx|netcup|njalla|transip)$ ]]; then
 		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
 		PREFCHAL="-a dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
 	else
@@ -277,9 +280,16 @@ fi
 
 # generating certs if necessary
 if [ ! -f "/config/keys/letsencrypt/fullchain.pem" ]; then
+	if [ "$CERTPROVIDER" = "zerossl" ] && [ -n "$EMAIL" ]; then
+		echo "Retrieving EAB from ZeroSSL"
+		EAB_CREDS=$(curl -s https://api.zerossl.com/acme/eab-credentials-email --data "email=$EMAIL")
+		ZEROSSL_EAB_KID=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_kid'])")
+		ZEROSSL_EAB_HMAC_KEY=$(echo "$EAB_CREDS" | python3 -c "import sys, json; print(json.load(sys.stdin)['eab_hmac_key'])")
+		ZEROSSL_EAB="--eab-kid ${ZEROSSL_EAB_KID} --eab-hmac-key ${ZEROSSL_EAB_HMAC_KEY}"
+	fi
 	echo "Generating new certificate"
 	# shellcheck disable=SC2086
-	certbot certonly --renew-by-default --server $ACMESERVER $PREFCHAL --rsa-key-size 4096 $EMAILPARAM --agree-tos $URL_REAL
+	certbot certonly --renew-by-default --server $ACMESERVER $ZEROSSL_EAB $PREFCHAL --rsa-key-size 4096 $EMAILPARAM --agree-tos $URL_REAL
 	if [ -d /config/keys/letsencrypt ]; then
 		cd /config/keys/letsencrypt || exit
 	else
@@ -306,10 +316,8 @@ fi
 [[ ! -d /var/lib/libmaxminddb ]] &&
 	ln -s /config/geoip2db /var/lib/libmaxminddb
 # check GeoIP2 database
-if [ ! -f /etc/conf.d/libmaxminddb ]; then
-	touch /etc/conf.d/libmaxminddb
-fi
 if [ -n "$MAXMINDDB_LICENSE_KEY" ]; then
+	touch /etc/conf.d/libmaxminddb
 	sed -i "s|.*MAXMINDDB_LICENSE_KEY.*|MAXMINDDB_LICENSE_KEY=\"${MAXMINDDB_LICENSE_KEY}\"|g" /etc/conf.d/libmaxminddb
 	if [ ! -f /var/lib/libmaxminddb/GeoLite2-City.mmdb ]; then
 		echo "Downloading GeoIP2 City database."
