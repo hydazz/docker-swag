@@ -115,15 +115,15 @@ RUN set -xe && \
    mv /etc/fail2ban/filter.d /defaults/fail2ban/ && \
    echo "**** copy proxy confs to /default ****" && \
    mkdir -p /defaults/proxy-confs && \
-   curl -o \
+   curl --silent -o \
       /tmp/proxy.tar.gz -L \
       "https://github.com/linuxserver/reverse-proxy-confs/tarball/master" && \
    tar xf \
    /tmp/proxy.tar.gz -C \
-      /defaults/proxy-confs --strip-components=1 --exclude=linux*/.gitattributes --exclude=linux*/.github --exclude=linux*/.gitignore --exclude=linux*/LICENSE && \
+      /defaults/proxy-confs --strip-components=1 --exclude=linux*/README.md --exclude=linux*/.gitattributes --exclude=linux*/.github --exclude=linux*/.gitignore --exclude=linux*/LICENSE && \
    echo "**** configure nginx ****" && \
    rm -f /etc/nginx/conf.d/default.conf && \
-   curl -o \
+   curl --silent -o \
       /defaults/dhparams.pem -L \
       "https://lsio.ams3.digitaloceanspaces.com/dhparams.pem" && \
    echo "**** cleanup ****" && \
