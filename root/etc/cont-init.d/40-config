@@ -15,11 +15,6 @@ DNSPLUGIN=${DNSPLUGIN}\\n\
 EMAIL=${EMAIL}\\n\
 STAGING=${STAGING}\\n"
 
-# Echo init finish for test runs
-if [ -n "${TEST_RUN}" ]; then
-	echo '[services.d] done.'
-fi
-
 # Sanitize variables
 SANED_VARS=(DNSPLUGIN EMAIL EXTRA_DOMAINS ONLY_SUBDOMAINS STAGING SUBDOMAINS URL VALIDATION CERTPROVIDER)
 for i in "${SANED_VARS[@]}"; do
