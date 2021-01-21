@@ -138,9 +138,9 @@ RUN \
      /tmp/* \
      /root/.cache
 
-# nginx healthcheck
+# http healthcheck
 HEALTHCHECK --start-period=10s --timeout=5s \
-   CMD curl --fail http://localhost/ || exit 1
+   CMD curl --fail 'http://localhost/' || exit 1
 
 # add local files
 COPY root/ /
