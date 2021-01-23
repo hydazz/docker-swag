@@ -8,11 +8,10 @@ LABEL build_version="Fork of Linuxserver.io version:- ${SWAG_RELEASE} Build-date
 LABEL maintainer="hydaz"
 
 # environment settings
-ENV \
-   DHLEVEL=2048 \
-   ONLY_SUBDOMAINS=false \
-   AWS_CONFIG_FILE=/config/dns-conf/route53.ini \
-   S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+ENV DHLEVEL=2048 \
+    ONLY_SUBDOMAINS=false \
+    AWS_CONFIG_FILE=/config/dns-conf/route53.ini \
+    S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 RUN \
    echo "**** install build packages ****" && \
@@ -132,7 +131,7 @@ RUN \
      build-dependencies && \
    for cleanfiles in *.pyc *.pyo; \
      do \
-     find /usr/lib/python3.*  -iname "${cleanfiles}" -exec rm -f '{}' + \
+     find /usr/lib/python3.* -iname "${cleanfiles}" -exec rm -f '{}' + \
      ; done && \
    rm -rf \
      /tmp/* \
