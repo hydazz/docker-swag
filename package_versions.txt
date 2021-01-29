@@ -79,7 +79,7 @@ libpng-1.6.37-r1
 libproc-3.3.16-r0
 libressl3.1-libcrypto-3.1.5-r0
 libressl3.1-libssl-3.1.5-r0
-librsvg-2.50.2-r0
+librsvg-2.50.3-r0
 libsasl-2.1.27-r11
 libseccomp-2.5.1-r0
 libsecret-0.20.4-r0
