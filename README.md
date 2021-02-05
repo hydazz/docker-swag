@@ -48,3 +48,7 @@ _swag_ usage example:
 | Restart Nginx            | swag nginx restart |
 | Restart PHP-FPM          | swag php restart   |
 | Test php.ini             | swag php test      |
+
+## Fixing Appdata Permissions
+
+If you ever accidentally screw up the permissions on the appdata folder, run fix-perms within the container. This will restore most of the files/folders with the correct permissions.
