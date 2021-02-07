@@ -49,7 +49,7 @@ libblkid-2.36.1-r1
 libbsd-0.10.0-r0
 libbz2-1.0.8-r1
 libc-utils-0.7.2-r3
-libcap-2.47-r0
+libcap-2.48-r0
 libcrypto1.1-1.1.1i-r0
 libcurl-7.75.0-r0
 libde265-1.0.4-r0
@@ -57,7 +57,7 @@ libedit-20191231.3.1-r1
 libevent-2.1.12-r1
 libffi-3.3-r2
 libgcc-10.2.1_pre1-r3
-libgcrypt-1.9.1-r0
+libgcrypt-1.9.1-r1
 libgd-2.3.1-r0
 libgpg-error-1.41-r0
 libheif-1.9.1-r0
