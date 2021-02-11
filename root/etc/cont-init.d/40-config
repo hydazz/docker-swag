@@ -74,6 +74,8 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 	cp /defaults/geoip2.conf /config/nginx/geoip2.conf
 [[ ! -f /config/www/502.html ]] &&
 	cp /defaults/502.html /config/www/502.html
+[[ ! -f /etc/conf.d/libmaxminddb ]] &&
+	cp /defaults/libmaxminddb /etc/conf.d/libmaxminddb
 
 # remove lua bits from nginx.conf if not done before
 if ! grep -q '#Removed lua' /config/nginx/nginx.conf; then
