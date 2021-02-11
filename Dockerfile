@@ -16,6 +16,7 @@ ENV DHLEVEL=2048 \
 RUN \
 	echo "**** install build packages ****" && \
 	apk add --no-cache --virtual=build-dependencies \
+		cargo \
 		g++ \
 		gcc \
 		libffi-dev \
@@ -26,6 +27,8 @@ RUN \
 		fail2ban \
 		gnupg \
 		memcached \
+		nginx-mod-http-brotli \
+		nginx-mod-http-dav-ext \
 		nginx-mod-http-echo \
 		nginx-mod-http-fancyindex \
 		nginx-mod-http-geoip2 \
