@@ -53,7 +53,6 @@ libcrypto1.1-1.1.1i-r0
 libcurl-7.75.0-r0
 libde265-1.0.4-r0
 libedit-20191231.3.1-r1
-libevent-2.1.12-r1
 libffi-3.3-r2
 libgcc-10.2.1_pre1-r3
 libgcrypt-1.9.1-r1
@@ -68,9 +67,7 @@ libksba-1.5.0-r0
 libldap-2.4.56-r0
 libltdl-2.4.6-r7
 libmagic-5.39-r0
-libmaxminddb-1.5.0-r0
 libmcrypt-2.5.8-r9
-libmemcached-libs-1.0.18-r4
 libmnl-1.0.4-r1
 libmount-2.36.1-r1
 libnftnl-libs-1.1.9-r0
@@ -80,7 +77,6 @@ libressl3.1-libcrypto-3.1.5-r0
 libressl3.1-libssl-3.1.5-r0
 librsvg-2.50.3-r0
 libsasl-2.1.27-r11
-libseccomp-2.5.1-r0
 libsecret-0.20.4-r0
 libsm-1.2.3-r0
 libsodium-1.0.18-r0
@@ -106,7 +102,6 @@ libzip-1.7.3-r2
 linux-pam-1.5.1-r0
 logrotate-3.18.0-r0
 lz4-libs-1.9.3-r0
-memcached-1.6.9-r0
 musl-1.2.2-r1
 musl-utils-1.2.2-r1
 nano-5.5-r0
@@ -120,7 +115,6 @@ nginx-mod-http-brotli-1.18.0-r14
 nginx-mod-http-dav-ext-1.18.0-r14
 nginx-mod-http-echo-1.18.0-r14
 nginx-mod-http-fancyindex-1.18.0-r14
-nginx-mod-http-geoip2-1.18.0-r14
 nginx-mod-http-headers-more-1.18.0-r14
 nginx-mod-http-image-filter-1.18.0-r14
 nginx-mod-http-nchan-1.18.0-r14
@@ -132,7 +126,6 @@ nginx-mod-http-xslt-filter-1.18.0-r14
 nginx-mod-mail-1.18.0-r14
 nginx-mod-rtmp-1.18.0-r14
 nginx-mod-stream-1.18.0-r14
-nginx-mod-stream-geoip2-1.18.0-r14
 nginx-vim-1.18.0-r14
 npth-1.6-r0
 oniguruma-6.9.6-r0
@@ -162,17 +155,14 @@ php7-ldap-7.4.15-r1
 php7-mbstring-7.4.15-r1
 php7-mysqli-7.4.15-r1
 php7-mysqlnd-7.4.15-r1
-php7-opcache-7.4.15-r1
 php7-openssl-7.4.15-r1
 php7-pdo-7.4.15-r1
 php7-pdo_mysql-7.4.15-r1
 php7-pdo_odbc-7.4.15-r1
 php7-pear-7.4.15-r0
-php7-pecl-apcu-5.1.19-r1
 php7-pecl-igbinary-3.2.2_rc1-r0
 php7-pecl-imagick-3.4.4-r7
 php7-pecl-mcrypt-1.0.4-r0
-php7-pecl-memcached-3.1.5-r2
 php7-pecl-redis-5.3.3-r0
 php7-phar-7.4.15-r1
 php7-posix-7.4.15-r1
