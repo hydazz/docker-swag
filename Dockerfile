@@ -3,8 +3,8 @@ FROM vcxpz/baseimage-alpine-nginx:${TAG}
 
 # set version label
 ARG BUILD_DATE
-ARG SWAG_RELEASE
-LABEL build_version="Fork of Linuxserver.io version:- ${SWAG_RELEASE} Build-date:- ${BUILD_DATE}"
+ARG VERSION
+LABEL build_version="Fork of Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="hydaz"
 
 # environment settings
@@ -26,12 +26,10 @@ RUN \
 	apk add --no-cache --upgrade \
 		fail2ban \
 		gnupg \
-		memcached \
 		nginx-mod-http-brotli \
 		nginx-mod-http-dav-ext \
 		nginx-mod-http-echo \
 		nginx-mod-http-fancyindex \
-		nginx-mod-http-geoip2 \
 		nginx-mod-http-headers-more \
 		nginx-mod-http-image-filter \
 		nginx-mod-http-nchan \
@@ -43,7 +41,6 @@ RUN \
 		nginx-mod-mail \
 		nginx-mod-rtmp \
 		nginx-mod-stream \
-		nginx-mod-stream-geoip2 \
 		nginx-vim \
 		php7-bcmath \
 		php7-bz2 \
@@ -59,13 +56,10 @@ RUN \
 		php7-ldap \
 		php7-mysqli \
 		php7-mysqlnd \
-		php7-opcache \
 		php7-pdo_mysql \
 		php7-pdo_odbc \
-		php7-pecl-apcu \
 		php7-pecl-imagick \
 		php7-pecl-mcrypt \
-		php7-pecl-memcached \
 		php7-pecl-redis \
 		php7-phar \
 		php7-posix \
@@ -87,27 +81,7 @@ RUN \
 		pip && \
 	pip3 install -U \
 		certbot \
-		certbot-dns-aliyun \
 		certbot-dns-cloudflare \
-		certbot-dns-cloudxns \
-		certbot-dns-cpanel \
-		certbot-dns-digitalocean \
-		certbot-dns-dnsimple \
-		certbot-dns-dnsmadeeasy \
-		certbot-dns-domeneshop \
-		certbot-dns-google \
-		certbot-dns-hetzner \
-		certbot-dns-inwx \
-		certbot-dns-linode \
-		certbot-dns-luadns \
-		certbot-dns-netcup \
-		certbot-dns-njalla \
-		certbot-dns-nsone \
-		certbot-dns-ovh \
-		certbot-dns-rfc2136 \
-		certbot-dns-route53 \
-		certbot-dns-transip \
-		certbot-plugin-gandi \
 		cryptography \
 		requests && \
 	echo "**** remove unnecessary fail2ban filters ****" && \

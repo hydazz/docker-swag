@@ -74,8 +74,6 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 	cp /defaults/geoip2.conf /config/nginx/geoip2.conf
 [[ ! -f /config/www/502.html ]] &&
 	cp /defaults/502.html /config/www/502.html
-[[ ! -f /etc/conf.d/libmaxminddb ]] &&
-	cp /defaults/libmaxminddb /etc/conf.d/libmaxminddb
 
 # remove lua bits from nginx.conf if not done before
 if ! grep -q '#Removed lua' /config/nginx/nginx.conf; then
@@ -316,24 +314,6 @@ if [ ! -f "/config/keys/letsencrypt/fullchain.pem" ]; then
 	echo "New certificate generated; starting nginx"
 else
 	echo "Certificate exists; parameters unchanged; starting nginx"
-fi
-
-# create GeoIP2 folder symlink
-[[ -d /var/lib/libmaxminddb ]] && [[ ! -L /var/lib/libmaxminddb ]] &&
-	rm -rf /var/lib/libmaxminddb
-[[ ! -d /var/lib/libmaxminddb ]] &&
-	ln -s /config/geoip2db /var/lib/libmaxminddb
-# check GeoIP2 database
-if [ -n "$MAXMINDDB_LICENSE_KEY" ]; then
-	sed -i "s|.*MAXMINDDB_LICENSE_KEY.*|MAXMINDDB_LICENSE_KEY=\"${MAXMINDDB_LICENSE_KEY}\"|g" /etc/conf.d/libmaxminddb
-	if [ ! -f /var/lib/libmaxminddb/GeoLite2-City.mmdb ]; then
-		echo "Downloading GeoIP2 City database."
-		/etc/periodic/weekly/libmaxminddb
-	fi
-elif [ -f /var/lib/libmaxminddb/GeoLite2-City.mmdb ]; then
-	echo -e "Currently using the user provided GeoLite2-City.mmdb.\nIf you want to enable weekly auto-updates of the database, retrieve a free license key from MaxMind,\nand add a new env variable \"MAXMINDDB_LICENSE_KEY\", set to your license key."
-else
-	echo -e "Starting 2019/12/30, GeoIP2 databases require personal license key to download. Please retrieve a free license key from MaxMind,\nand add a new env variable \"MAXMINDDB_LICENSE_KEY\", set to your license key."
 fi
 
 # logfiles needed by fail2ban
