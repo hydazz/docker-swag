@@ -112,7 +112,8 @@ RUN \
 	done && \
 	rm -rf \
 		/tmp/* \
-		/root/.cache
+		/root/.cache \
+		/root/.cargo
 
 # http healthcheck
 HEALTHCHECK --start-period=10s --timeout=5s \
