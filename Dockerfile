@@ -3,8 +3,6 @@ FROM vcxpz/baseimage-alpine-nginx:${TAG}
 
 # set version label
 ARG BUILD_DATE
-ARG VERSION
-LABEL build_version="Fork of Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="hydaz"
 
 # environment settings
@@ -25,7 +23,10 @@ RUN \
 	echo "**** install runtime packages ****" && \
 	apk add --no-cache --upgrade \
 		fail2ban \
+		ffmpeg \
+		gnu-libiconv \
 		gnupg \
+		libxml2 \
 		nginx-mod-http-brotli \
 		nginx-mod-http-dav-ext \
 		nginx-mod-http-echo \
@@ -50,16 +51,21 @@ RUN \
 		php7-exif \
 		php7-ftp \
 		php7-gd \
+		php7-gmp \
 		php7-iconv \
 		php7-imap \
 		php7-intl \
 		php7-ldap \
 		php7-mysqli \
 		php7-mysqlnd \
+		php7-opcache \
+		php7-pcntl \
 		php7-pdo_mysql \
 		php7-pdo_odbc \
+		php7-pecl-apcu \
 		php7-pecl-imagick \
 		php7-pecl-mcrypt \
+		php7-pecl-memcached \
 		php7-pecl-redis \
 		php7-phar \
 		php7-posix \
