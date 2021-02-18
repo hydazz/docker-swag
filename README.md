@@ -38,7 +38,7 @@ docker run -d \
 
 ## Custom Commands
 
-#### _swag_ Command
+### _swag_ Command
 
 This image also features the _swag_ command, which is a script I made so you don't have to restart the whole container to apply configuration changes or to test the configuration.
 
