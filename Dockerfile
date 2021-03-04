@@ -52,7 +52,6 @@ RUN \
 		php7-gd \
 		php7-gmp \
 		php7-iconv \
-		php7-imagick \
 		php7-imap \
 		php7-intl \
 		php7-ldap \
@@ -63,6 +62,7 @@ RUN \
 		php7-pdo_mysql \
 		php7-pdo_odbc \
 		php7-pecl-apcu \
+		php7-pecl-imagick \
 		php7-pecl-mcrypt \
 		php7-pecl-memcached \
 		php7-pecl-redis \
