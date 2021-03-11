@@ -68,6 +68,7 @@ RUN \
 		php7-pecl-redis \
 		php7-phar \
 		php7-posix \
+		php7-smbclient \
 		php7-soap \
 		php7-sockets \
 		php7-sodium \
