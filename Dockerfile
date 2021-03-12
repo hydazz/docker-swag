@@ -42,42 +42,41 @@ RUN \
 		nginx-mod-rtmp \
 		nginx-mod-stream \
 		nginx-vim \
-		php7-bcmath \
-		php7-bz2 \
-		php7-ctype \
-		php7-curl \
-		php7-dom \
-		php7-exif \
-		php7-ftp \
-		php7-gd \
-		php7-gmp \
-		php7-iconv \
-		php7-imap \
-		php7-intl \
-		php7-ldap \
-		php7-mysqli \
-		php7-mysqlnd \
-		php7-opcache \
-		php7-pcntl \
-		php7-pdo_mysql \
-		php7-pdo_odbc \
-		php7-pecl-apcu \
-		php7-pecl-imagick \
-		php7-pecl-mcrypt \
-		php7-pecl-memcached \
-		php7-pecl-redis \
-		php7-phar \
-		php7-posix \
-		php7-smbclient \
-		php7-soap \
-		php7-sockets \
-		php7-sodium \
-		php7-tokenizer \
-		php7-xml \
-		php7-xmlreader \
-		php7-xmlrpc \
-		php7-xsl \
-		php7-zip \
+		php8-bcmath \
+		php8-bz2 \
+		php8-ctype \
+		php8-curl \
+		php8-dom \
+		php8-exif \
+		php8-ftp \
+		php8-gd \
+		php8-gmp \
+		php8-iconv \
+		php8-imap \
+		php8-intl \
+		php8-ldap \
+		php8-mysqli \
+		php8-mysqlnd \
+		php8-opcache \
+		php8-pcntl \
+		php8-pdo_mysql \
+		php8-pdo_odbc \
+		php8-pecl-apcu \
+		php8-pecl-imagick \
+		php8-pecl-mcrypt \
+		php8-pecl-memcached \
+		php8-pecl-redis \
+		php8-phar \
+		php8-posix \
+		php8-smbclient \
+		php8-soap \
+		php8-sockets \
+		php8-sodium \
+		php8-tokenizer \
+		php8-xml \
+		php8-xmlreader \
+		php8-xsl \
+		php8-zip \
 		py3-cryptography \
 		py3-future \
 		py3-pip \

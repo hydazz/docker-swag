@@ -21,7 +21,7 @@ if [ "$SRV" = "php" ]; then
 		exit 0
 	fi
 	if [ "$CMD" = "test" ]; then
-		php -e -c /etc/php7/php.ini -r 'echo "PHP Configuration OK\n";'
+		php -e -c /etc/php8/php.ini -r 'echo "PHP Configuration OK\n";'
 		exit 0
 	fi
 fi
