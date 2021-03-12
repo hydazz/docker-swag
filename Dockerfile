@@ -20,7 +20,7 @@ RUN \
 		openssl-dev \
 		python3-dev && \
 	echo "**** install runtime packages ****" && \
-	apk add --no-cache --upgrade \
+	apk add --no-cache \
 		fail2ban \
 		ffmpeg \
 		gnu-libiconv \
@@ -62,7 +62,6 @@ RUN \
 		php8-pdo_mysql \
 		php8-pdo_odbc \
 		php8-pecl-apcu \
-		php8-pecl-imagick \
 		php8-pecl-mcrypt \
 		php8-pecl-memcached \
 		php8-pecl-redis \
@@ -81,6 +80,8 @@ RUN \
 		py3-future \
 		py3-pip \
 		whois && \
+	apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ \
+		php8-pecl-imagick && \
 	echo "**** install certbot plugins ****" && \
 	pip3 install -U \
 		pip && \
