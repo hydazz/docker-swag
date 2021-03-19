@@ -21,11 +21,13 @@ RUN set -xe && \
 		python3-dev && \
 	echo "**** install runtime packages ****" && \
 	apk add --no-cache \
+		curl \
 		fail2ban \
 		ffmpeg \
 		gnu-libiconv \
 		gnupg \
 		libxml2 \
+		memcached \
 		nginx-mod-http-brotli \
 		nginx-mod-http-dav-ext \
 		nginx-mod-http-echo \
@@ -61,16 +63,20 @@ RUN set -xe && \
 		php8-pcntl \
 		php8-pdo_mysql \
 		php8-pdo_odbc \
+		php8-pdo_pgsql \
+		php8-pdo_sqlite \
 		php8-pecl-apcu \
 		php8-pecl-mcrypt \
 		php8-pecl-memcached \
 		php8-pecl-redis \
+		php8-pgsql \
 		php8-phar \
 		php8-posix \
 		php8-smbclient \
 		php8-soap \
 		php8-sockets \
 		php8-sodium \
+		php8-sqlite3 \
 		php8-tokenizer \
 		php8-xml \
 		php8-xmlreader \
