@@ -137,8 +137,8 @@ mpdecimal-2.5.1-r1
 musl-1.2.2-r2
 musl-utils-1.2.2-r2
 nano-5.6.1-r0
-ncurses-libs-6.2_p20210313-r0
-ncurses-terminfo-base-6.2_p20210313-r0
+ncurses-libs-6.2_p20210320-r0
+ncurses-terminfo-base-6.2_p20210320-r0
 nettle-3.7.2-r0
 nghttp2-libs-1.43.0-r0
 nginx-1.18.0-r15
