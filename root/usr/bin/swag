@@ -1,29 +1,20 @@
 #!/usr/bin/with-contenv bash
 
-SRV=$1
-CMD=$2
+# ~~~~~~~~~~~~~~~~~~~~~~~
+# set colours
+# ~~~~~~~~~~~~~~~~~~~~~~~
 
-if [ "$SRV" = "nginx" ]; then
-	if [ "$CMD" = "restart" ]; then
-		echo "Restarting Nginx"
-		s6-svc -h /var/run/s6/services/nginx
-		exit 0
-	fi
-	if [ "$CMD" = "test" ]; then
-		nginx -t -c /config/nginx/nginx.conf
-		exit 0
-	fi
+red='\033[1;31m'   # red
+bold='\033[1;37m'  # white bold
+nc='\033[0m'       # no colour
+
+service=$1
+
+if [ "${service}" = "nginx" ]; then
+	nginx -t -c /config/nginx/nginx.conf
+elif [ "${service}" = "php" ]; then
+	php -e -c /etc/php8/php.ini -r 'echo "PHP Configuration OK\n";'
+else
+	echo -e "${red}>>> ERROR: ${bold}Invalid usage, use 'swag <nginx/php> test'${nc}"
+	exit 1
 fi
-if [ "$SRV" = "php" ]; then
-	if [ "$CMD" = "restart" ]; then
-		echo "Restarting PHP-FPM"
-		s6-svc -t /var/run/s6/services/php-fpm
-		exit 0
-	fi
-	if [ "$CMD" = "test" ]; then
-		php -e -c /etc/php8/php.ini -r 'echo "PHP Configuration OK\n";'
-		exit 0
-	fi
-fi
-echo "Invalid usage, use 'swag <nginx/php> <restart/test>'"
-exit 1
