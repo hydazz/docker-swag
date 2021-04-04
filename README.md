@@ -40,16 +40,14 @@ docker run -d \
 
 ### _swag_ Command
 
-This image also features the _swag_ command, which is a script I made so you don't have to restart the whole container to apply configuration changes or to test the configuration.
+This image also features the _swag_ command, which is a script I made to test the configuration.
 
 _swag_ usage example:
 
-| Function                 | Usage              |
-| ------------------------ | ------------------ |
-| Test Nginx Configuration | swag nginx test    |
-| Restart Nginx            | swag nginx restart |
-| Restart PHP-FPM          | swag php restart   |
-| Test php.ini             | swag php test      |
+| Function                 | Usage           |
+| ------------------------ | --------------- |
+| Test Nginx Configuration | swag nginx test |
+| Test php.ini             | swag php test   |
 
 ## Fixing Appdata Permissions
 
