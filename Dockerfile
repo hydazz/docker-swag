@@ -66,6 +66,7 @@ RUN set -xe && \
 		php8-pdo_pgsql \
 		php8-pdo_sqlite \
 		php8-pecl-apcu \
+		php8-pecl-imagick \
 		php8-pecl-mcrypt \
 		php8-pecl-memcached \
 		php8-pecl-redis \
@@ -87,7 +88,7 @@ RUN set -xe && \
 		py3-pip \
 		whois && \
 	apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ \
-		php8-pecl-imagick && \
+		fail2ban && \
 	echo "**** install certbot plugins ****" && \
 	pip3 install -U \
 		pip && \
