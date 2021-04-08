@@ -22,7 +22,7 @@ RUN set -xe && \
 	echo "**** install runtime packages ****" && \
 	apk add --no-cache \
 		curl \
-		fail2ban \
+#		fail2ban \
 		ffmpeg \
 		gnu-libiconv \
 		gnupg \
