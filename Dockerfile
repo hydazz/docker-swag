@@ -87,7 +87,7 @@ RUN set -xe && \
 		py3-future \
 		py3-pip \
 		whois && \
-	apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ \
+	apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/main/ \
 		fail2ban && \
 	echo "**** install certbot plugins ****" && \
 	pip3 install -U \
