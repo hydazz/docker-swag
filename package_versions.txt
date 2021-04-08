@@ -21,7 +21,7 @@ cups-libs-2.3.3-r2
 curl-7.76.0-r0
 dbus-libs-1.12.20-r2
 expat-2.3.0-r0
-fail2ban-0.11.1-r4
+fail2ban-0.11.2-r0
 ffmpeg-4.3.2-r1
 ffmpeg-libs-4.3.2-r1
 fontconfig-2.13.1-r4
