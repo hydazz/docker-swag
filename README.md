@@ -2,7 +2,9 @@
 
 [![docker hub](https://img.shields.io/badge/docker_hub-link-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/vcxpz/swag) ![docker image size](https://img.shields.io/docker/image-size/vcxpz/swag?style=for-the-badge&logo=docker) [![auto build](https://img.shields.io/badge/docker_builds-automated-blue?style=for-the-badge&logo=docker?color=d1aa67)](https://github.com/hydazz/docker-swag/actions?query=workflow%3A"Auto+Builder+CI") [![codacy branch grade](https://img.shields.io/codacy/grade/df6f0af2764c4b55ae183c3088b9d3d8/main?style=for-the-badge&logo=codacy)](https://app.codacy.com/gh/hydazz/docker-swag)
 
-Fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/) (Modified for my needs)
+**This is an unofficial image that has been modified for my own needs. If my needs match your needs, feel free to use this image at your own risk.**
+
+Fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
 
 SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes (Let's Encrypt and ZeroSSL). It also contains fail2ban for intrusion prevention.
 
