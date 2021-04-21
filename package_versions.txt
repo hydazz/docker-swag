@@ -54,7 +54,7 @@ libarchive-3.5.1-r0
 libass-0.15.0-r0
 libassuan-2.5.5-r0
 libattr-2.5.1-r0
-libblkid-2.36.2-r1
+libblkid-2.36.2-r2
 libbsd-0.11.3-r0
 libbz2-1.0.8-r1
 libc-utils-0.7.2-r3
@@ -67,10 +67,10 @@ libdrm-2.4.105-r0
 libedit-20210216.3.1-r0
 libevent-2.1.12-r2
 libffi-3.3-r2
-libgcc-10.3.1_git20210409-r0
-libgcrypt-1.9.2-r0
+libgcc-10.3.1_git20210409-r1
+libgcrypt-1.9.3-r0
 libgd-2.3.2-r0
-libgomp-10.3.1_git20210409-r0
+libgomp-10.3.1_git20210409-r1
 libgpg-error-1.42-r0
 libheif-1.11.0-r0
 libice-1.0.10-r0
@@ -85,7 +85,7 @@ libmcrypt-2.5.8-r9
 libmd-1.0.3-r0
 libmemcached-libs-1.0.18-r4
 libmnl-1.0.4-r1
-libmount-2.36.2-r1
+libmount-2.36.2-r2
 libnftnl-libs-1.1.9-r0
 libogg-1.3.4-r0
 libpciaccess-0.16-r0
@@ -104,7 +104,7 @@ libsodium-1.0.18-r0
 libsrt-1.4.2-r0
 libssh-0.9.5-r0
 libssl1.1-1.1.1k-r0
-libstdc++-10.3.1_git20210409-r0
+libstdc++-10.3.1_git20210409-r1
 libtasn1-4.16.0-r1
 libtheora-1.1.1-r16
 libtls-standalone-2.9.1-r1
@@ -201,8 +201,9 @@ php8-pdo_pgsql-8.0.3-r0
 php8-pdo_sqlite-8.0.3-r0
 php8-pear-8.0.3-r0
 php8-pecl-apcu-5.1.20-r0
-php8-pecl-igbinary-3.2.2_rc1-r0
+php8-pecl-igbinary-3.2.2-r0
 php8-pecl-imagick-3.4.4-r1
+php8-pecl-mailparse-3.1.1-r0
 php8-pecl-mcrypt-1.0.4-r0
 php8-pecl-memcached-3.1.5-r1
 php8-pecl-redis-5.3.4-r0
@@ -271,7 +272,7 @@ shadow-4.8.1-r0
 shared-mime-info-2.1-r0
 skalibs-2.10.0.3-r0
 soxr-0.1.3-r2
-sqlite-libs-3.35.4-r0
+sqlite-libs-3.35.5-r0
 ssl_client-1.33.0-r6
 talloc-2.3.2-r1
 tdb-libs-1.4.3-r1
