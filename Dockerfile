@@ -71,10 +71,10 @@ RUN set -xe && \
 		php8-pecl-mcrypt \
 		php8-pecl-memcached \
 		php8-pecl-redis \
+		php8-pecl-smbclient \
 		php8-pgsql \
 		php8-phar \
 		php8-posix \
-		php8-smbclient \
 		php8-soap \
 		php8-sockets \
 		php8-sodium \
