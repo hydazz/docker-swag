@@ -67,6 +67,7 @@ RUN set -xe && \
 		php8-pdo_sqlite \
 		php8-pecl-apcu \
 		php8-pecl-imagick \
+		php8-pecl-mailparse \
 		php8-pecl-mcrypt \
 		php8-pecl-memcached \
 		php8-pecl-redis \
