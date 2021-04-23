@@ -20,7 +20,7 @@ RUN set -xe && \
 		openssl-dev \
 		python3-dev && \
 	echo "**** install runtime packages ****" && \
-	apk add --no-cache \
+	apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
 		curl \
 		fail2ban \
 		ffmpeg \
