@@ -75,7 +75,7 @@ libheif-1.11.0-r0
 libice-1.0.10-r0
 libidn-1.35-r0
 libintl-0.21-r0
-libjpeg-turbo-2.0.6-r0
+libjpeg-turbo-2.1.0-r0
 libksba-1.5.1-r0
 libldap-2.4.58-r0
 libltdl-2.4.6-r7
