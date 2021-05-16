@@ -1,5 +1,5 @@
 CacheControl==0.12.6
-ConfigArgParse==1.4
+ConfigArgParse==1.4.1
 PyYAML==5.4.1
 acme==1.15.0
 appdirs==1.4.4
