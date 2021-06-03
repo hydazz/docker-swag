@@ -91,7 +91,7 @@ RUN set -xe && \
 	echo "**** install certbot plugins ****" && \
 	pip3 install -U \
 		pip && \
-	pip3 install -U \
+	pip3 install -U --find-links https://wheel-index.linuxserver.io/alpine/ \
 		certbot \
 		certbot-dns-cloudflare \
 		cryptography \

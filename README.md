@@ -4,7 +4,7 @@
 
 **This is an unofficial image that has been modified for my own needs. If my needs match your needs, feel free to use this image at your own risk.**
 
-Fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/)
+Fork of [linuxserver/docker-swag](https://github.com/linuxserver/docker-swag/) (Equivalent to 1.16.0-ls63)
 
 SWAG - Secure Web Application Gateway (formerly known as letsencrypt, no relation to Let's Encrypt™) sets up an Nginx webserver and reverse proxy with php support and a built-in certbot client that automates free SSL server certificate generation and renewal processes (Let's Encrypt and ZeroSSL). It also contains fail2ban for intrusion prevention.
 

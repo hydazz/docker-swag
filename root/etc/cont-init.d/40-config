@@ -42,8 +42,8 @@ chown -R abc:abc /config/dns-conf
 cp -R /defaults/proxy-confs /config/nginx/
 
 # copy/update the fail2ban config defaults to/in /config
-cp -nR /defaults/fail2ban/filter.d /config/fail2ban/
-cp -nR /defaults/fail2ban/action.d /config/fail2ban/
+cp -rn /defaults/fail2ban/filter.d /config/fail2ban/
+cp -rn /defaults/fail2ban/action.d /config/fail2ban/
 # if jail.local is missing in /config, copy default
 [[ ! -f /config/fail2ban/jail.local ]] &&
 	cp /defaults/jail.local /config/fail2ban/jail.local
@@ -52,8 +52,8 @@ cp -nR /defaults/fail2ban/action.d /config/fail2ban/
 	rm -rf /etc/fail2ban/filter.d
 [[ -d /etc/fail2ban/action.d ]] &&
 	rm -rf /etc/fail2ban/action.d
-cp -fR /config/fail2ban/filter.d /etc/fail2ban/
-cp -fR /config/fail2ban/action.d /etc/fail2ban/
+cp -rf /config/fail2ban/filter.d /etc/fail2ban/
+cp -rf /config/fail2ban/action.d /etc/fail2ban/
 cp /defaults/fail2ban/fail2ban.local /etc/fail2ban/
 cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 
@@ -75,25 +75,48 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 [[ ! -f /config/www/502.html ]] &&
 	cp /defaults/502.html /config/www/502.html
 
+# Set resolver, ignore ipv6 addresses
+if ! grep -q 'resolver' /config/nginx/resolver.conf; then
+	RESOLVERRAW=$(awk 'BEGIN{ORS=" "} $1=="nameserver" {print $2}' /etc/resolv.conf)
+	for i in ${RESOLVERRAW}; do
+		if [ $(awk -F ':' '{print NF-1}' <<<${i}) -le 2 ]; then
+			RESOLVER="${RESOLVER} ${i}"
+		fi
+	done
+	if [ -z "${RESOLVER}" ]; then
+		RESOLVER="127.0.0.11"
+	fi
+	echo "Setting resolver to ${RESOLVER}"
+	echo -e "# This file is auto-generated only on first start, based on the container's /etc/resolv.conf file. Feel free to modify it as you wish.\n\nresolver ${RESOLVER} valid=30s;" >/config/nginx/resolver.conf
+fi
+
+# Set worker_processes
+if ! grep -q 'worker_processes' /config/nginx/worker_processes.conf; then
+	WORKER_PROCESSES=$(nproc)
+	echo "Setting worker_processes to ${WORKER_PROCESSES}"
+	echo -e "# This file is auto-generated only on first start, based on the cpu cores detected. Feel free to change it to any other number or to auto to let nginx handle it automatically.\n\nworker_processes ${WORKER_PROCESSES};" >/config/nginx/worker_processes.conf
+fi
+
 # remove lua bits from nginx.conf if not done before
 if ! grep -q '#Removed lua' /config/nginx/nginx.conf; then
 	echo "Removing lua specific info from nginx.conf"
 	sed -i 's|\tlua_load_resty_core off;|\t#Removed lua. Do not remove this comment|g' /config/nginx/nginx.conf
 fi
 
+# patch authelia-server.conf for CVE-2021-32637
+if ! grep -q 'if ($request_uri ~' /config/nginx/authelia-server.conf; then
+	sed -i '/internal;/a \ \ \ \ if ($request_uri ~ [^a-zA-Z0-9_+-=\\!@$%&*?~.:#'\''\\;\\(\\)\\[\\]]) { return 401; }' /config/nginx/authelia-server.conf
+fi
+
 # copy pre-generated dhparams or generate if needed
 [[ ! -f /config/nginx/dhparams.pem ]] &&
 	cp /defaults/dhparams.pem /config/nginx/dhparams.pem
 if ! grep -q 'PARAMETERS' "/config/nginx/dhparams.pem"; then
-	curl -o /config/nginx/dhparams.pem -L "https://lsio.ams3.digitaloceanspaces.com/dhparams.pem"
-fi
-if ! grep -q 'PARAMETERS' "/config/nginx/dhparams.pem"; then
-	echo "Generating dhparams.pem. This will take a long time. Do not stop the container until this process is completed."
-	openssl dhparam -out /config/nginx/dhparams.pem 4096
+	curl -o /config/nginx/dhparams.pem -L "https://ssl-config.mozilla.org/ffdhe4096.txt"
 fi
 
 # check to make sure DNSPLUGIN is selected if dns validation is used
-[[ "$VALIDATION" = "dns" ]] && [[ ! "$DNSPLUGIN" =~ ^(aliyun|cloudflare|cloudxns|cpanel|digitalocean|directadmin|dnsimple|dnsmadeeasy|domeneshop|gandi|gehirn|google|hetzner|inwx|linode|luadns|netcup|njalla|nsone|ovh|rfc2136|route53|sakuracloud|transip)$ ]] &&
+[[ "$VALIDATION" = "dns" ]] && [[ ! "$DNSPLUGIN" == "cloudflare" ]] &&
 	echo "Please set the DNSPLUGIN variable to a valid plugin name. See docker info for more details." &&
 	sleep infinity
 
@@ -189,28 +212,10 @@ fi
 
 # setting the validation method to use
 if [ "$VALIDATION" = "dns" ]; then
-	if [ "$DNSPLUGIN" = "route53" ]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="--dns-${DNSPLUGIN} ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(cpanel)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--certbot-dns-${DNSPLUGIN}:${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="-a certbot-dns-${DNSPLUGIN}:${DNSPLUGIN} --certbot-dns-${DNSPLUGIN}:${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(gandi)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then echo "Gandi dns plugin does not support setting propagation time"; fi
-		PREFCHAL="-a certbot-plugin-${DNSPLUGIN}:dns --certbot-plugin-${DNSPLUGIN}:dns-credentials /config/dns-conf/${DNSPLUGIN}.ini"
-	elif [[ "$DNSPLUGIN" =~ ^(google)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="--dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.json ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(aliyun|domeneshop|hetzner|inwx|netcup|njalla|transip)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="-a dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
-	elif [[ "$DNSPLUGIN" =~ ^(directadmin)$ ]]; then
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="-a ${DNSPLUGIN} --${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
-	else
-		if [ -n "$PROPAGATION" ]; then PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"; fi
-		PREFCHAL="--dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
+	if [ -n "$PROPAGATION" ]; then
+		PROPAGATIONPARAM="--dns-${DNSPLUGIN}-propagation-seconds ${PROPAGATION}"
 	fi
+	PREFCHAL="--dns-${DNSPLUGIN} --dns-${DNSPLUGIN}-credentials /config/dns-conf/${DNSPLUGIN}.ini ${PROPAGATIONPARAM}"
 	echo "${VALIDATION} validation via ${DNSPLUGIN} plugin is selected"
 elif [ "$VALIDATION" = "tls-sni" ]; then
 	PREFCHAL="--non-interactive --standalone --preferred-challenges http"
@@ -270,12 +275,6 @@ fi
 # saving new variables
 echo -e "ORIGURL=\"$URL\" ORIGSUBDOMAINS=\"$SUBDOMAINS\" ORIGONLY_SUBDOMAINS=\"$ONLY_SUBDOMAINS\" ORIGEXTRA_DOMAINS=\"$EXTRA_DOMAINS\" ORIGVALIDATION=\"$VALIDATION\" ORIGDNSPLUGIN=\"$DNSPLUGIN\" ORIGPROPAGATION=\"$PROPAGATION\" ORIGSTAGING=\"$STAGING\" ORIGDUCKDNSTOKEN=\"$DUCKDNSTOKEN\" ORIGCERTPROVIDER=\"$CERTPROVIDER\" ORIGEMAIL=\"$EMAIL\"" >/config/.donoteditthisfile.conf
 
-# alter extension for error message
-if [ "$DNSPLUGIN" = "google" ]; then
-	FILENAME="$DNSPLUGIN.json"
-else
-	FILENAME="$DNSPLUGIN.ini"
-fi
 
 # generating certs if necessary
 if [ ! -f "/config/keys/letsencrypt/fullchain.pem" ]; then
@@ -311,6 +310,24 @@ if [ ! -f "/config/keys/letsencrypt/fullchain.pem" ]; then
 	echo "New certificate generated; starting nginx"
 else
 	echo "Certificate exists; parameters unchanged; starting nginx"
+fi
+
+# create GeoIP2 folder symlink
+[[ -d /var/lib/libmaxminddb ]] && [[ ! -L /var/lib/libmaxminddb ]] &&
+	rm -rf /var/lib/libmaxminddb
+[[ ! -d /var/lib/libmaxminddb ]] &&
+	ln -s /config/geoip2db /var/lib/libmaxminddb
+# check GeoIP2 database
+if [ -n "$MAXMINDDB_LICENSE_KEY" ]; then
+	sed -i "s|.*MAXMINDDB_LICENSE_KEY.*|MAXMINDDB_LICENSE_KEY=\"${MAXMINDDB_LICENSE_KEY}\"|g" /etc/conf.d/libmaxminddb
+	if [ ! -f /var/lib/libmaxminddb/GeoLite2-City.mmdb ]; then
+		echo "Downloading GeoIP2 City database."
+		/etc/periodic/weekly/libmaxminddb
+	fi
+elif [ -f /var/lib/libmaxminddb/GeoLite2-City.mmdb ]; then
+	echo -e "Currently using the user provided GeoLite2-City.mmdb.\nIf you want to enable weekly auto-updates of the database, retrieve a free license key from MaxMind,\nand add a new env variable \"MAXMINDDB_LICENSE_KEY\", set to your license key."
+else
+	echo -e "Starting 2019/12/30, GeoIP2 databases require personal license key to download. Please retrieve a free license key from MaxMind,\nand add a new env variable \"MAXMINDDB_LICENSE_KEY\", set to your license key."
 fi
 
 # logfiles needed by fail2ban
