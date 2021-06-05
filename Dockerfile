@@ -32,6 +32,7 @@ RUN set -xe && \
 		nginx-mod-http-dav-ext \
 		nginx-mod-http-echo \
 		nginx-mod-http-fancyindex \
+		nginx-mod-http-geoip2 \
 		nginx-mod-http-headers-more \
 		nginx-mod-http-image-filter \
 		nginx-mod-http-nchan \
@@ -43,6 +44,7 @@ RUN set -xe && \
 		nginx-mod-mail \
 		nginx-mod-rtmp \
 		nginx-mod-stream \
+		nginx-mod-stream-geoip2 \
 		nginx-vim \
 		php8-bcmath \
 		php8-bz2 \
@@ -91,7 +93,7 @@ RUN set -xe && \
 	echo "**** install certbot plugins ****" && \
 	pip3 install -U \
 		pip && \
-	pip3 install -U --find-links https://wheel-index.linuxserver.io/alpine/ \
+	pip3 install -U \
 		certbot \
 		certbot-dns-cloudflare \
 		cryptography \
