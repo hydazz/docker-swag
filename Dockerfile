@@ -124,6 +124,11 @@ RUN set -xe && \
 	for cleanfiles in *.pyc *.pyo; do \
 		find /usr/lib/python3.* -iname "${cleanfiles}" -delete; \
 	done && \
+	echo "**** configure php and nginx for nextcloud ****" && \
+	echo 'apc.enable_cli=1' >> /etc/php8/conf.d/apcu.ini && \
+	sed -i \
+		'/opcache.enable=1/a opcache.enable_cli=1' \
+		/etc/php8/php.ini
 	rm -rf \
 		/tmp/* \
 		/root/.cache \
