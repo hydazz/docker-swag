@@ -128,7 +128,7 @@ RUN set -xe && \
 	echo 'apc.enable_cli=1' >> /etc/php8/conf.d/apcu.ini && \
 	sed -i \
 		'/opcache.enable=1/a opcache.enable_cli=1' \
-		/etc/php8/php.ini
+		/etc/php8/php.ini && \
 	rm -rf \
 		/tmp/* \
 		/root/.cache \
