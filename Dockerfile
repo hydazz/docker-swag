@@ -8,7 +8,8 @@ LABEL maintainer="hydaz"
 ENV DHLEVEL=2048 \
 	ONLY_SUBDOMAINS=false \
 	AWS_CONFIG_FILE=/config/dns-conf/route53.ini \
-	S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+	S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
+	LD_PRELOAD="/usr/lib/preloadable_libiconv.so"
 
 RUN set -xe && \
 	echo "**** install build packages ****" && \
