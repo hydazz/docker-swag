@@ -43,7 +43,7 @@ soupsieve==2.2.1
 toml==0.10.2
 urllib3==1.26.6
 webencodings==0.5.1
-zope.component==5.0.0
+zope.component==5.0.1
 zope.event==4.5.0
 zope.hookable==5.0.1
 zope.interface==5.4.0
