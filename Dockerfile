@@ -48,6 +48,7 @@ RUN set -xe && \
 		nginx-mod-stream-geoip2 \
 		nginx-vim \
 		php8-bcmath \
+		php8-brotli \
 		php8-bz2 \
 		php8-ctype \
 		php8-curl \
