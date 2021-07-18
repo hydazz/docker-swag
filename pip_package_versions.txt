@@ -10,7 +10,7 @@ certbot==1.17.0
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
-charset-normalizer==2.0.1
+charset-normalizer==2.0.3
 cloudflare==2.8.15
 colorama==0.4.4
 configobj==5.0.6

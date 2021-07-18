@@ -7,7 +7,7 @@ apk-tools-2.12.5-r1
 apr-1.7.0-r0
 apr-util-1.6.1-r7
 argon2-libs-20190702-r1
-avahi-libs-0.8-r4
+avahi-libs-0.8-r5
 bash-5.1.8-r0
 brotli-libs-1.0.9-r5
 busybox-1.33.1-r4
@@ -63,7 +63,7 @@ libcurl-7.77.0-r1
 libdav1d-0.9.0-r0
 libde265-1.0.8-r1
 libdrm-2.4.107-r0
-libedit-20210216.3.1-r0
+libedit-20210714.3.1-r0
 libevent-2.1.12-r2
 libffi-3.3-r2
 libgcc-10.3.1_git20210625-r0
@@ -83,7 +83,7 @@ libmaxminddb-1.5.2-r0
 libmcrypt-2.5.8-r9
 libmd-1.0.3-r0
 libmemcached-libs-1.0.18-r4
-libmnl-1.0.4-r1
+libmnl-1.0.4-r2
 libmount-2.37-r4
 libnftnl-libs-1.2.0-r0
 libogg-1.3.5-r0
@@ -99,7 +99,7 @@ libsasl-2.1.27-r12
 libseccomp-2.5.1-r2
 libsecret-0.20.4-r1
 libsm-1.2.3-r0
-libsmbclient-4.14.5-r0
+libsmbclient-4.14.6-r0
 libsodium-1.0.18-r0
 libsrt-1.4.2-r0
 libssh-0.9.5-r0
@@ -113,7 +113,7 @@ libva-2.12.0-r0
 libvdpau-1.4-r0
 libvorbis-1.3.7-r0
 libvpx-1.10.0-r0
-libwbclient-4.14.5-r0
+libwbclient-4.14.6-r0
 libwebp-1.2.0-r2
 libx11-1.7.2-r0
 libxau-1.0.9-r0
@@ -134,11 +134,11 @@ logrotate-3.18.1-r0
 lz4-libs-1.9.3-r0
 memcached-1.6.9-r0
 mpdecimal-2.5.1-r1
-musl-1.2.2-r3
-musl-utils-1.2.2-r3
+musl-1.2.2-r4
+musl-utils-1.2.2-r4
 nano-5.8-r1
-ncurses-libs-6.2_p20210703-r0
-ncurses-terminfo-base-6.2_p20210703-r0
+ncurses-libs-6.2_p20210710-r0
+ncurses-terminfo-base-6.2_p20210710-r0
 nettle-3.7.3-r0
 nghttp2-libs-1.43.0-r0
 nginx-1.20.1-r5
@@ -263,8 +263,8 @@ py3-webencodings-0.5.1-r4
 python3-3.9.6-r0
 readline-8.1.0-r0
 s6-ipcserver-2.10.0.3-r0
-samba-libs-4.14.5-r0
-samba-util-libs-4.14.5-r0
+samba-libs-4.14.6-r0
+samba-util-libs-4.14.6-r0
 scanelf-1.3.2-r0
 sdl2-2.0.14-r1
 shadow-4.8.1-r0
